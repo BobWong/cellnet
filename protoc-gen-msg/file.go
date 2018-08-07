@@ -8,7 +8,7 @@ import (
 	"go/token"
 	"text/template"
 
-	"github.com/davyxu/cellnet/util"
+	"github.com/BobWong/cellnet/util"
 	"github.com/davyxu/pbmeta"
 )
 
@@ -20,10 +20,10 @@ package {{.PackageName}}
 
 {{if gt .TotalMessages 0}}
 import (
-	"github.com/davyxu/cellnet"
+	"github.com/BobWong/cellnet"
 	"reflect"
-	_ "github.com/davyxu/cellnet/codec/gogopb"
-	"github.com/davyxu/cellnet/codec"
+	_ "github.com/BobWong/cellnet/codec/gogopb"
+	"github.com/BobWong/cellnet/codec"
 )
 {{end}}
 
