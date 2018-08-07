@@ -1,8 +1,8 @@
 package rpc
 
 import (
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/BobWong/cellnet"
+	"github.com/BobWong/cellnet/codec"
 )
 
 type RecvMsgEvent struct {

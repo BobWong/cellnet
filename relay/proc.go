@@ -1,8 +1,8 @@
 package relay
 
 import (
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/BobWong/cellnet"
+	"github.com/BobWong/cellnet/codec"
 )
 
 // 处理入站的relay消息

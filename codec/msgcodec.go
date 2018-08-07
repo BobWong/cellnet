@@ -1,7 +1,7 @@
 package codec
 
 import (
-	"github.com/davyxu/cellnet"
+	"github.com/BobWong/cellnet"
 )
 
 // 编码消息, 在使用了带内存池的codec中，可以传入session或peer的ContextSet，保存内存池上下文，默认ctx传nil

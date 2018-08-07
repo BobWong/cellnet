@@ -2,8 +2,8 @@ package rpc
 
 import (
 	"errors"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/BobWong/cellnet"
+	"github.com/BobWong/cellnet/codec"
 	"sync"
 	"sync/atomic"
 )

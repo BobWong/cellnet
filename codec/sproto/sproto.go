@@ -3,12 +3,12 @@ package sprotocodec
 import (
 	"reflect"
 
-	"github.com/davyxu/cellnet"
+	"github.com/BobWong/cellnet"
 	"github.com/davyxu/gosproto"
 	"fmt"
 	"path"
-	"github.com/davyxu/cellnet/util"
-	"github.com/davyxu/cellnet/codec"
+	"github.com/BobWong/cellnet/util"
+	"github.com/BobWong/cellnet/codec"
 )
 
 type sprotoCodec struct {

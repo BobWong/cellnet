@@ -1,7 +1,7 @@
 package proc
 
 import (
-	"github.com/davyxu/cellnet"
+	"github.com/BobWong/cellnet"
 )
 
 // 处理器设置接口，由各Peer实现

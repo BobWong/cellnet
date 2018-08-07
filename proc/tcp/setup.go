@@ -1,8 +1,8 @@
 package tcp
 
 import (
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/proc"
+	"github.com/BobWong/cellnet"
+	"github.com/BobWong/cellnet/proc"
 )
 
 func init() {

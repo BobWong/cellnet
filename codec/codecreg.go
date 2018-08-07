@@ -1,6 +1,6 @@
 package codec
 
-import "github.com/davyxu/cellnet"
+import "github.com/BobWong/cellnet"
 
 var registedCodecs []cellnet.Codec
 

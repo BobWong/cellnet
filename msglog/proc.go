@@ -1,7 +1,7 @@
 package msglog
 
 import (
-	"github.com/davyxu/cellnet"
+	"github.com/BobWong/cellnet"
 	"github.com/davyxu/golog"
 )
 
