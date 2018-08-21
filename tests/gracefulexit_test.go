@@ -2,10 +2,10 @@ package tests
 
 import (
 	"fmt"
-	"github.com/davyxu/cellnet"
-	"github.com/davyxu/cellnet/peer"
-	"github.com/davyxu/cellnet/proc"
-	"github.com/davyxu/cellnet/util"
+	"github.com/BobWong/cellnet"
+	"github.com/BobWong/cellnet/peer"
+	"github.com/BobWong/cellnet/proc"
+	"github.com/BobWong/cellnet/util"
 	"sync"
 	"testing"
 	"time"

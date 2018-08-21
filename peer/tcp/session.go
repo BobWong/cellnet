@@ -68,7 +68,6 @@ func (self *tcpSession) recvLoop() {
 	for self.conn != nil {
 
 		msg, err := self.ReadMessage(self)
-
 		if err != nil {
 			if !util.IsEOFOrNetReadError(err) {
 				log.Errorf("session closed, sesid: %d, err: %s", self.ID(), err)

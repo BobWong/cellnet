@@ -2,7 +2,7 @@ package msglog
 
 import (
 	"github.com/BobWong/cellnet"
-	"github.com/davyxu/golog"
+	"github.com/BobWong/golog"
 )
 
 // 萃取消息中的消息

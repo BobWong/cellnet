@@ -37,7 +37,6 @@ func (self *CoreProcBundle) SetCallback(v cellnet.EventCallback) {
 var notHandled = errors.New("Processor: Transimitter nil")
 
 func (self *CoreProcBundle) ReadMessage(ses cellnet.Session) (msg interface{}, err error) {
-
 	if self.transmit != nil {
 		return self.transmit.OnRecvMessage(ses)
 	}

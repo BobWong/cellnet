@@ -58,6 +58,9 @@ func RecvLTVPacket(reader io.Reader, maxPacketSize int) (msg interface{}, err er
 	if len(sizeBuffer) < bodySize {
 		return nil, ErrShortMsgID
 	}
+	//if len(body) < bodySize {
+	//	return nil, ErrShortMsgID
+	//}
 
 	msgid := binary.LittleEndian.Uint16(body)
 
