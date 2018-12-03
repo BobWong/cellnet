@@ -4,7 +4,7 @@ import (
 	"reflect"
 
 	"github.com/BobWong/cellnet"
-	"github.com/BobWong/gosproto"
+	"github.com/Bobwong/gosproto"
 	"fmt"
 	"path"
 	"github.com/BobWong/cellnet/util"
