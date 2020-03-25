@@ -40,7 +40,7 @@ tcp.ltv使用util/packet.go中的函数解析封包，同时处理粘包问题�
 
 
 封包解析请参考:
-https://github.com/BobWong/cellnet/blob/master/proc/tcp/transmitter.go
+https://github.com/bobwong89757/cellnet/blob/master/proc/tcp/transmitter.go
 
 
 ## 内建处理器(udp.ltv)封包格式
@@ -54,4 +54,4 @@ https://github.com/BobWong/cellnet/blob/master/proc/tcp/transmitter.go
 用户消息数据(payload) | []byte | 用户的消息大小，对应消息编码后的数据，例如Protobuf编码后的数据。需要使用codec.DecodeMessage包解码。
 
 封包解析请参考:
-https://github.com/BobWong/cellnet/blob/master/proc/udp/recv.go
+https://github.com/bobwong89757/cellnet/blob/master/proc/udp/recv.go

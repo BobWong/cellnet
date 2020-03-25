@@ -2,10 +2,10 @@ package relay
 
 import (
 	"fmt"
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/codec"
-	_ "github.com/BobWong/cellnet/codec/binary"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/codec"
+	_ "github.com/bobwong89757/cellnet/codec/binary"
+	"github.com/bobwong89757/cellnet/util"
 	"reflect"
 )
 

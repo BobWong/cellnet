@@ -2,12 +2,12 @@
 
  [![Build Status][3]][4] [![Go Report Card][5]][6] [![MIT licensed][11]][12] [![GoDoc][1]][2]
 
-[1]: https://godoc.org/github.com/BobWong/cellnet?status.svg
-[2]: https://godoc.org/github.com/BobWong/cellnet
+[1]: https://godoc.org/github.com/bobwong89757/cellnet?status.svg
+[2]: https://godoc.org/github.com/bobwong89757/cellnet
 [3]: https://travis-ci.org/BobWong/cellnet.svg?branch=master
 [4]: https://travis-ci.org/BobWong/cellnet
-[5]: https://goreportcard.com/badge/github.com/BobWong/cellnet
-[6]: https://goreportcard.com/report/github.com/BobWong/cellnet
+[5]: https://goreportcard.com/badge/github.com/bobwong89757/cellnet
+[6]: https://goreportcard.com/report/github.com/bobwong89757/cellnet
 [11]: https://img.shields.io/badge/license-MIT-blue.svg
 [12]: LICENSE
 
@@ -58,7 +58,7 @@ cellnet经过多个版本的迭代，无论是作为初学者学习的范例，�
     - json
         适合与第三方服务器通信
 
-    - 二进制协议(https://github.com/davyxu/goobjfmt)
+    - 二进制协议(https://github.com/bobwong89757/goobjfmt)
 
        内存流直接序列化, 适用于服务器内网传输
 
@@ -106,17 +106,17 @@ cellnet经过多个版本的迭代，无论是作为初学者学习的范例，�
 编译和使用cellnet，请下载Go1.10以上版本
 
 ```
-  go get -v github.com/BobWong/cellnet
+  go get -v github.com/bobwong89757/cellnet
 
-  go get -v github.com/BobWong/golog
+  go get -v github.com/bobwong89757/golog
 
-  go get -v github.com/davyxu/goobjfmt
+  go get -v github.com/bobwong89757/goobjfmt
 ```
 
 # 第三方库
 
 cellnet 使用Protobuf时，需要使用附带的pb插件生成一个绑定代码，下面的链接可以处理这个问题
-[Google Protobuf 编码安装](https://github.com/BobWong/cellnet/blob/master/doc/pbcodec.md)
+[Google Protobuf 编码安装](https://github.com/bobwong89757/cellnet/blob/master/doc/pbcodec.md)
 
 [WebSocket实现](https://github.com/gorilla/websocket)
 
@@ -232,7 +232,7 @@ func client() {
 
 # 目录功能
 
-[目录及功能一览](https://github.com/BobWong/cellnet/blob/master/doc/dirstruct.md)
+[目录及功能一览](https://github.com/bobwong89757/cellnet/blob/master/doc/dirstruct.md)
 
 # 运行聊天例子
 
@@ -240,7 +240,7 @@ func client() {
 
 假设 GOPATH设置为/home/you/go
 
-那么 cellnet结构位于 /home/you/go/src/github.com/BobWong/cellnet
+那么 cellnet结构位于 /home/you/go/src/github.com/bobwong89757/cellnet
 
 
 ## 运行 服务器
@@ -271,32 +271,32 @@ sid1 say: hello
 
 理解下面链接中的概念，可以迅速使用cellnet做基本的网络通讯及消息处理
 
-* [队列](https://github.com/BobWong/cellnet/blob/master/doc/queue.md)
+* [队列](https://github.com/bobwong89757/cellnet/blob/master/doc/queue.md)
 
-* [端(Peer)](https://github.com/BobWong/cellnet/blob/master/doc/peer.md)
+* [端(Peer)](https://github.com/bobwong89757/cellnet/blob/master/doc/peer.md)
 
-* [收发处理消息](https://github.com/BobWong/cellnet/blob/master/doc/procmsg.md)
+* [收发处理消息](https://github.com/bobwong89757/cellnet/blob/master/doc/procmsg.md)
 
 
 # 扩展及定制
 
 若cellnet内建的Peer, Codec及Processor流程不能满足你的需求，可以阅读下面链接内容，添加并扩展cellnet功能
 
-* [定制封包编码(Codec)](https://github.com/BobWong/cellnet/blob/master/doc/customcodec.md)
+* [定制封包编码(Codec)](https://github.com/bobwong89757/cellnet/blob/master/doc/customcodec.md)
 
     封包编码可以是JSON，Protobuf等
 
-* [定制端(Peer)](https://github.com/BobWong/cellnet/blob/master/doc/custompeer.md)
+* [定制端(Peer)](https://github.com/bobwong89757/cellnet/blob/master/doc/custompeer.md)
 
     新增Redis连接器，与cellnet自带的TCP/UDP的Peer都不同。
 
-* [定制处理器(Processor)](https://github.com/BobWong/cellnet/blob/master/doc/customproc.md)
+* [定制处理器(Processor)](https://github.com/bobwong89757/cellnet/blob/master/doc/customproc.md)
 
     需要在收发包时有统一的处理行为
 
 # FAQ
 
-[常见问题及回答](https://github.com/BobWong/cellnet/blob/master/doc/faq.md)
+[常见问题及回答](https://github.com/bobwong89757/cellnet/blob/master/doc/faq.md)
 
 这里应该有你想知道的答案
 
@@ -319,11 +319,11 @@ IronsDu(https://github.com/IronsDu), 在v2中大幅度性能优化
 viwii(viwii@sina.cn), 在v2中，提供一个可能造成死锁的bug
 
 # 版本历史
-2018.5  v4版本 [详细请查看](https://github.com/BobWong/cellnet/blob/v4/CHANGES.md)
+2018.5  v4版本 [详细请查看](https://github.com/bobwong89757/cellnet/blob/v4/CHANGES.md)
 
-2017.8  v3版本 [详细请查看](https://github.com/BobWong/cellnet/blob/v3/CHANGES.md)
+2017.8  v3版本 [详细请查看](https://github.com/bobwong89757/cellnet/blob/v3/CHANGES.md)
 
-2017.1  v2版本 [详细请查看](https://github.com/BobWong/cellnet/blob/v2/CHANGES.md)
+2017.1  v2版本 [详细请查看](https://github.com/bobwong89757/cellnet/blob/v2/CHANGES.md)
 
 2015.8	v1版本
 
@@ -336,4 +336,4 @@ viwii(viwii@sina.cn), 在v2中，提供一个可能造成死锁的bug
 
 知乎: http://www.zhihu.com/people/sunicdavy
 
-提交bug及特性: https://github.com/BobWong/cellnet/issues
+提交bug及特性: https://github.com/bobwong89757/cellnet/issues

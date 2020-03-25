@@ -1,9 +1,9 @@
 package gorillaws
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
+	"github.com/bobwong89757/cellnet/util"
 	"github.com/gorilla/websocket"
 	"sync"
 )

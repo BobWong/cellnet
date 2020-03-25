@@ -5,8 +5,8 @@ import (
 	"os"
 
 	"bytes"
-	"github.com/BobWong/golog"
-	"github.com/davyxu/pbmeta"
+	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/pbmeta"
 	"github.com/gogo/protobuf/proto"
 	pbprotos "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
 	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"

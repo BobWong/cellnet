@@ -1,14 +1,14 @@
 package main
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/examples/chat/proto"
-	"github.com/BobWong/cellnet/peer"
-	"github.com/BobWong/cellnet/proc"
-	"github.com/BobWong/golog"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/examples/chat/proto"
+	"github.com/bobwong89757/cellnet/peer"
+	"github.com/bobwong89757/cellnet/proc"
+	"github.com/bobwong89757/golog"
 
-	_ "github.com/BobWong/cellnet/peer/tcp"
-	_ "github.com/BobWong/cellnet/proc/tcp"
+	_ "github.com/bobwong89757/cellnet/peer/tcp"
+	_ "github.com/bobwong89757/cellnet/proc/tcp"
 )
 
 var log = golog.New("server")

@@ -1,14 +1,14 @@
 language: go
 
 install:
-  - go get -v github.com/BobWong/golog
-  - go get -v github.com/davyxu/goobjfmt
+  - go get -v github.com/bobwong89757/golog
+  - go get -v github.com/bobwong89757/goobjfmt
 
 go:
   - 1.10
 
 script:
-  - go test -v github.com/BobWong/cellnet/tests
+  - go test -v github.com/bobwong89757/cellnet/tests
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

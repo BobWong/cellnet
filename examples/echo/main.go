@@ -3,8 +3,8 @@ package main
 import (
 	"flag"
 	"fmt"
-	_ "github.com/BobWong/cellnet/peer/tcp" // 注册TCP Peer
-	_ "github.com/BobWong/cellnet/proc/tcp" // 注册TCP Processor
+	_ "github.com/bobwong89757/cellnet/peer/tcp" // 注册TCP Peer
+	_ "github.com/bobwong89757/cellnet/proc/tcp" // 注册TCP Processor
 )
 
 const peerAddress = "127.0.0.1:17701"

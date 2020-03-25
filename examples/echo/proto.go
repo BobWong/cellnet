@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/codec"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/util"
 	"reflect"
 )
 

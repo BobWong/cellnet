@@ -31,9 +31,9 @@
 该插件根据proto内容，生成msgid.go文件，可以将消息绑定到cellnet的codec系统中，让cellnet可以识别protobuf的消息
 
 ```
-    go get -v github.com/BobWong/cellnet/protoc-gen-msg
+    go get -v github.com/bobwong89757/cellnet/protoc-gen-msg
 
-    go install -v github.com/BobWong/cellnet/protoc-gen-msg
+    go install -v github.com/bobwong89757/cellnet/protoc-gen-msg
 ```
 
 ## 测试
@@ -41,7 +41,7 @@
 执行以下shell
 
 ```
-${GOPATH}/github.com/BobWong/cellnet/codec/gogopb/test/export.sh
+${GOPATH}/github.com/bobwong89757/cellnet/codec/gogopb/test/export.sh
 ```
 
 将使用protoc读取pb.proto并生成pb.pb.go和msgid.go两个文件

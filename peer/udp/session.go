@@ -1,8 +1,8 @@
 package udp
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
 	"net"
 	"time"
 )

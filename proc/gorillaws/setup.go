@@ -1,8 +1,8 @@
 package gorillaws
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/proc"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/proc"
 )
 
 func init() {

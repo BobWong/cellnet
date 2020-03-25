@@ -1,7 +1,7 @@
 package relay
 
 import (
-	"github.com/BobWong/cellnet"
+	"github.com/bobwong89757/cellnet"
 )
 
 type RecvMsgEvent struct {

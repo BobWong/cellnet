@@ -5,7 +5,7 @@ benchmark           性能测试
 
 codec               编码支持，以及编码注册
 
-    binary          二进制格式编码(github.com/davyxu/goobjfmt)
+    binary          二进制格式编码(github.com/bobwong89757/goobjfmt)
 
     httpform        http表单格式
 

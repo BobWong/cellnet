@@ -2,14 +2,14 @@ package tests
 
 import (
 	"fmt"
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
-	_ "github.com/BobWong/cellnet/peer/tcp"
-	_ "github.com/BobWong/cellnet/peer/udp"
-	"github.com/BobWong/cellnet/proc"
-	_ "github.com/BobWong/cellnet/proc/tcp"
-	_ "github.com/BobWong/cellnet/proc/udp"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
+	_ "github.com/bobwong89757/cellnet/peer/tcp"
+	_ "github.com/bobwong89757/cellnet/peer/udp"
+	"github.com/bobwong89757/cellnet/proc"
+	_ "github.com/bobwong89757/cellnet/proc/tcp"
+	_ "github.com/bobwong89757/cellnet/proc/udp"
+	"github.com/bobwong89757/cellnet/util"
 	"testing"
 	"time"
 )

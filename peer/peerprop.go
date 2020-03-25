@@ -1,6 +1,6 @@
 package peer
 
-import "github.com/BobWong/cellnet"
+import "github.com/bobwong89757/cellnet"
 
 type CorePeerProperty struct {
 	name  string

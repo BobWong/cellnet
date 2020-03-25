@@ -1,6 +1,6 @@
 package msglog
 
-// 使用github.com/BobWong/golog的cellnet配色方案
+// 使用github.com/bobwong89757/golog的cellnet配色方案
 const LogColorDefine = `
 {
 	"Rule":[

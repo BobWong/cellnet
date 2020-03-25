@@ -1,6 +1,6 @@
 package http
 
-import "github.com/BobWong/cellnet"
+import "github.com/bobwong89757/cellnet"
 
 type StatusRespond struct {
 	StatusCode int

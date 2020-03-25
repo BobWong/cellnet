@@ -1,8 +1,8 @@
 package httpform
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/codec"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/codec"
 	"net/http"
 	"net/url"
 	"reflect"

@@ -1,8 +1,8 @@
 package msglog
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/golog"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/golog"
 )
 
 // 萃取消息中的消息

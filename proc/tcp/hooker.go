@@ -1,10 +1,10 @@
 package tcp
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/msglog"
-	"github.com/BobWong/cellnet/relay"
-	"github.com/BobWong/cellnet/rpc"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/msglog"
+	"github.com/bobwong89757/cellnet/relay"
+	"github.com/bobwong89757/cellnet/rpc"
 )
 
 // 带有RPC和relay功能

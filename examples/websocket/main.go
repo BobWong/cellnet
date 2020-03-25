@@ -1,17 +1,17 @@
 package main
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
-	"github.com/BobWong/cellnet/proc"
-	"github.com/BobWong/golog"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
+	"github.com/bobwong89757/cellnet/proc"
+	"github.com/bobwong89757/golog"
 
 	"fmt"
-	"github.com/BobWong/cellnet/codec"
-	_ "github.com/BobWong/cellnet/codec/json"
-	_ "github.com/BobWong/cellnet/peer/gorillaws"
-	_ "github.com/BobWong/cellnet/proc/gorillaws"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet/codec"
+	_ "github.com/bobwong89757/cellnet/codec/json"
+	_ "github.com/bobwong89757/cellnet/peer/gorillaws"
+	_ "github.com/bobwong89757/cellnet/proc/gorillaws"
+	"github.com/bobwong89757/cellnet/util"
 	"reflect"
 )
 

@@ -1,11 +1,11 @@
 package tests
 
 import (
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
-	"github.com/BobWong/cellnet/proc"
-	"github.com/BobWong/cellnet/relay"
-	"github.com/BobWong/cellnet/util"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
+	"github.com/bobwong89757/cellnet/proc"
+	"github.com/bobwong89757/cellnet/relay"
+	"github.com/bobwong89757/cellnet/util"
 	"reflect"
 	"sync"
 	"testing"

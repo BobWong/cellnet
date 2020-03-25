@@ -2,8 +2,8 @@ package http
 
 import (
 	"fmt"
-	"github.com/BobWong/cellnet"
-	"github.com/BobWong/cellnet/peer"
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/peer"
 	"io"
 	"net/http"
 	"reflect"

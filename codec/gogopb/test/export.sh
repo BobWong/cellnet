@@ -14,7 +14,7 @@ set -e
 
 go install -v github.com/gogo/protobuf/protoc-gen-gogofaster
 
-go install -v github.com/BobWong/cellnet/protoc-gen-msg
+go install -v github.com/bobwong89757/cellnet/protoc-gen-msg
 
 # windows下时，添加后缀名
 if [ `go env GOHOSTOS` == "windows" ];then
