@@ -1,13 +1,15 @@
 package cellnet
 
 import (
+	"fmt"
+	"log"
 	"runtime/debug"
 	"sync"
+	"time"
 )
 
 // 事件队列
 type EventQueue interface {
-
 	// 事件队列开始工作
 	StartLoop() EventQueue
 
@@ -24,17 +26,26 @@ type EventQueue interface {
 	EnableCapturePanic(v bool)
 }
 
+type CapturePanicNotifyFunc func(interface{}, EventQueue)
+
 type eventQueue struct {
-	queue chan func()
+	*Pipe
 
 	endSignal sync.WaitGroup
 
 	capturePanic bool
+
+	onPanic CapturePanicNotifyFunc
 }
 
 // 启动崩溃捕获
 func (self *eventQueue) EnableCapturePanic(v bool) {
 	self.capturePanic = v
+}
+
+// 设置捕获崩溃通知
+func (self *eventQueue) SetCapturePanicNotify(callback CapturePanicNotifyFunc) {
+	self.onPanic = callback
 }
 
 // 派发事件处理回调到队列中
@@ -44,7 +55,7 @@ func (self *eventQueue) Post(callback func()) {
 		return
 	}
 
-	self.queue <- callback
+	self.Add(callback)
 }
 
 // 保护调用用户函数
@@ -54,8 +65,7 @@ func (self *eventQueue) protectedCall(callback func()) {
 		defer func() {
 
 			if err := recover(); err != nil {
-
-				debug.PrintStack()
+				self.onPanic(err, self)
 			}
 
 		}()
@@ -71,13 +81,27 @@ func (self *eventQueue) StartLoop() EventQueue {
 
 	go func() {
 
-		for callback := range self.queue {
+		var writeList []interface{}
 
-			if callback == nil {
-				break
+		for {
+			writeList = writeList[0:0]
+			exit := self.Pick(&writeList)
+
+			// 遍历要发送的数据
+			for _, msg := range writeList {
+				switch t := msg.(type) {
+				case func():
+					self.protectedCall(t)
+				case nil:
+					break
+				default:
+					log.Printf("unexpected type %T", t)
+				}
 			}
 
-			self.protectedCall(callback)
+			if exit {
+				break
+			}
 		}
 
 		self.endSignal.Done()
@@ -88,7 +112,7 @@ func (self *eventQueue) StartLoop() EventQueue {
 
 // 停止事件循环
 func (self *eventQueue) StopLoop() EventQueue {
-	self.queue <- nil
+	self.Add(nil)
 	return self
 }
 
@@ -97,13 +121,18 @@ func (self *eventQueue) Wait() {
 	self.endSignal.Wait()
 }
 
-const DefaultQueueSize = 100
-
 // 创建默认长度的队列
 func NewEventQueue() EventQueue {
 
 	return &eventQueue{
-		queue: make(chan func(), DefaultQueueSize),
+		Pipe: NewPipe(),
+
+		// 默认的崩溃捕获打印
+		onPanic: func(raw interface{}, queue EventQueue) {
+
+			fmt.Printf("%s: %v \n%s\n", time.Now().Format("2006-01-02 15:04:05"), raw, string(debug.Stack()))
+			debug.PrintStack()
+		},
 	}
 }
 

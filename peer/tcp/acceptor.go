@@ -1,11 +1,12 @@
 package tcp
 
 import (
-	"fmt"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"net"
+	"strings"
+	"time"
 )
 
 // 接受器
@@ -16,13 +17,23 @@ type tcpAcceptor struct {
 	peer.CoreRunningTag
 	peer.CoreProcBundle
 	peer.CoreTCPSocketOption
+	peer.CoreCaptureIOPanic
 
 	// 保存侦听器
 	listener net.Listener
 }
 
-func (self *tcpAcceptor) ListenPort() int {
+func (self *tcpAcceptor) Port() int {
+	if self.listener == nil {
+		return 0
+	}
+
 	return self.listener.Addr().(*net.TCPAddr).Port
+}
+
+func (self *tcpAcceptor) IsReady() bool {
+
+	return self.IsRunning()
 }
 
 // 异步开始侦听
@@ -34,18 +45,20 @@ func (self *tcpAcceptor) Start() cellnet.Peer {
 		return self
 	}
 
-	ln, err := net.Listen("tcp", self.Address())
+	ln, err := util.DetectPort(self.Address(), func(a *util.Address, port int) (interface{}, error) {
+		return net.Listen("tcp", a.HostPortString(port))
+	})
 
 	if err != nil {
 
-		log.Errorf("#tcp.listen failed(%s) %v", self.NameOrAddress(), err.Error())
+		log.Errorf("#tcp.listen failed(%s) %v", self.Name(), err.Error())
 
 		self.SetRunning(false)
 
 		return self
 	}
 
-	self.listener = ln
+	self.listener = ln.(net.Listener)
 
 	log.Infof("#tcp.listen(%s) %s", self.Name(), self.ListenAddress())
 
@@ -56,12 +69,14 @@ func (self *tcpAcceptor) Start() cellnet.Peer {
 
 func (self *tcpAcceptor) ListenAddress() string {
 
-	host, _, err := util.SpliteAddress(self.Address())
-	if err != nil {
+	pos := strings.Index(self.Address(), ":")
+	if pos == -1 {
 		return self.Address()
 	}
 
-	return fmt.Sprintf("%s:%d", host, self.ListenPort())
+	host := self.Address()[:pos]
+
+	return util.JoinAddress(host, self.Port())
 }
 
 func (self *tcpAcceptor) accept() {
@@ -74,19 +89,21 @@ func (self *tcpAcceptor) accept() {
 			break
 		}
 
-		if err != nil {
+		if err == nil {
+			// 处理连接进入独立线程, 防止accept无法响应
+			go self.onNewSession(conn)
 
-			// 调试状态时, 才打出accept的具体错误
-			if log.IsDebugEnabled() {
-				log.Errorf("#tcp.accept failed(%s) %v", self.NameOrAddress(), err.Error())
+		}else{
+
+			if nerr, ok := err.(net.Error); ok && nerr.Temporary(){
+				time.Sleep(time.Millisecond)
+				continue
 			}
 
+			// 调试状态时, 才打出accept的具体错误
+			log.Errorf("#tcp.accept failed(%s) %v", self.Name(), err.Error())
 			break
 		}
-
-		// 处理连接进入独立线程, 防止accept无法响应
-		go self.onNewSession(conn)
-
 	}
 
 	self.SetRunning(false)
@@ -103,7 +120,10 @@ func (self *tcpAcceptor) onNewSession(conn net.Conn) {
 
 	ses.Start()
 
-	self.PostEvent(&cellnet.RecvMsgEvent{ses, &cellnet.SessionAccepted{}})
+	self.ProcEvent(&cellnet.RecvMsgEvent{
+		Ses: ses,
+		Msg: &cellnet.SessionAccepted{},
+	})
 }
 
 // 停止侦听器

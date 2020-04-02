@@ -5,10 +5,10 @@ import (
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/proc"
 	"github.com/bobwong89757/cellnet/relay"
-	"github.com/bobwong89757/cellnet/util"
 	"reflect"
 	"sync"
 	"testing"
+	"time"
 )
 
 const (
@@ -19,7 +19,7 @@ const (
 )
 
 var (
-	relay_Signal                  *util.SignalTester
+	relay_Signal                  *SignalTester
 	relay_ClientToAgentAcceptor   cellnet.Peer
 	relay_BackendToAgentConnector cellnet.Peer
 	relay_BackendToAgentAcceptor  cellnet.Peer
@@ -35,8 +35,8 @@ func relay_backend() {
 
 		if relayEvent, ok := ev.(*relay.RecvMsgEvent); ok {
 
-			log.Debugln("Relay to agent", relayEvent.Message(), relayEvent.ContextID)
-			relay.Relay(relay_BackendToAgentConnector, relayEvent.Message(), relayEvent.ContextID...)
+			log.Debugln("Relay to agent", relayEvent.Message(), relayEvent.PassThroughAsInt64())
+			relay.Relay(relay_BackendToAgentConnector, relayEvent.Message(), relayEvent.PassThroughAsInt64())
 
 		}
 
@@ -101,18 +101,13 @@ func relay_agent() {
 			// 广播器
 			sesAccessor := relay_ClientToAgentAcceptor.(cellnet.SessionAccessor)
 
-			// 要广播的客户端列表
-			for _, maskedSessionID := range event.ContextID {
+			// 去掉掩码
+			sesID := event.PassThroughAsInt64() - AgentSessionIDMask
+			ses := sesAccessor.GetSession(sesID)
+			if ses != nil {
 
-				// 去掉掩码
-				sesID := maskedSessionID - AgentSessionIDMask
-				ses := sesAccessor.GetSession(sesID)
-				if ses != nil {
-
-					log.Debugln("Broadcast to client", event.Message(), sesID)
-					ses.Send(event.Message())
-				}
-
+				log.Debugln("Broadcast to client", event.Message(), sesID)
+				ses.Send(event.Message())
 			}
 		}
 
@@ -155,11 +150,12 @@ func relay_client() {
 
 func TestRelay(t *testing.T) {
 
-	relay_Signal = util.NewSignalTester(t)
-
-	relay_backend()
+	relay_Signal = NewSignalTester(t)
+	relay_Signal.SetTimeout(time.Second * 5)
 
 	relay_agent()
+
+	relay_backend()
 
 	relay_client()
 

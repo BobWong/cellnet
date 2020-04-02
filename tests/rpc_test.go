@@ -4,8 +4,8 @@ import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/proc"
+	"github.com/bobwong89757/cellnet/proc/tcp"
 	"github.com/bobwong89757/cellnet/rpc"
-	"github.com/bobwong89757/cellnet/util"
 	"testing"
 	"time"
 )
@@ -13,8 +13,9 @@ import (
 const syncRPC_Address = "127.0.0.1:9201"
 
 var (
-	syncRPC_Signal  *util.SignalTester
-	asyncRPC_Signal *util.SignalTester
+	syncRPC_Signal  *SignalTester
+	asyncRPC_Signal *SignalTester
+	typeRPC_Signal  *SignalTester
 
 	rpc_Acceptor cellnet.Peer
 )
@@ -101,13 +102,40 @@ func asyncRPC_OnClientEvent(ev cellnet.Event) {
 	}
 }
 
+func typeRPC_OnClientEvent(ev cellnet.Event) {
+
+	switch ev.Message().(type) {
+	case *cellnet.SessionConnected:
+		for i := 0; i < 2; i++ {
+
+			copy := i + 1
+
+			// 注意, 这里不能使用CallType, 异步第一次回来后, 就将rpc上下文清楚,导致第二次之后的回调无法触发, 不属于bug
+			rpc.CallSyncType(ev.Session(), &TestEchoACK{
+				Msg:   "type",
+				Value: 1234,
+			}, time.Second*5, func(ack *TestEchoACK, err error) {
+
+				if err != nil {
+					panic(err)
+				}
+
+				log.Debugln("client type sync recv:", ack)
+				typeRPC_Signal.Done(copy)
+
+			})
+
+		}
+	}
+}
+
 func rpc_StartClient(eventFunc func(event cellnet.Event)) {
 
 	queue := cellnet.NewEventQueue()
 
 	p := peer.NewGenericPeer("tcp.Connector", "client", syncRPC_Address, queue)
 
-	proc.BindProcessorHandler(p, "tcp.ltv", eventFunc)
+	proc.BindProcessorHandler(p, "tcp.ltv.type", eventFunc)
 
 	p.Start()
 
@@ -116,7 +144,7 @@ func rpc_StartClient(eventFunc func(event cellnet.Event)) {
 
 func TestSyncRPC(t *testing.T) {
 
-	syncRPC_Signal = util.NewSignalTester(t)
+	syncRPC_Signal = NewSignalTester(t)
 
 	rpc_StartServer()
 
@@ -128,7 +156,7 @@ func TestSyncRPC(t *testing.T) {
 
 func TestASyncRPC(t *testing.T) {
 
-	asyncRPC_Signal = util.NewSignalTester(t)
+	asyncRPC_Signal = NewSignalTester(t)
 
 	rpc_StartServer()
 
@@ -136,4 +164,27 @@ func TestASyncRPC(t *testing.T) {
 	asyncRPC_Signal.WaitAndExpect("async not recv data ", 1, 2)
 
 	rpc_Acceptor.Stop()
+}
+
+func TestTypeRPC(t *testing.T) {
+
+	typeRPC_Signal = NewSignalTester(t)
+
+	rpc_StartServer()
+
+	rpc_StartClient(typeRPC_OnClientEvent)
+	typeRPC_Signal.WaitAndExpect("type rpc not recv data ", 1, 2)
+
+	rpc_Acceptor.Stop()
+}
+
+func init() {
+	// 对TypeRPC增强
+	proc.RegisterProcessor("tcp.ltv.type", func(bundle proc.ProcessorBundle, userCallback cellnet.EventCallback, args ...interface{}) {
+
+		bundle.SetTransmitter(new(tcp.TCPMessageTransmitter))
+		bundle.SetHooker(proc.NewMultiHooker(new(tcp.MsgHooker), new(rpc.TypeRPCHooker)))
+		bundle.SetCallback(proc.NewQueuedEventCallback(userCallback))
+	})
+
 }

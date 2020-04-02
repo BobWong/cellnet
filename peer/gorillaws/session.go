@@ -22,7 +22,7 @@ type wsSession struct {
 	exitSync sync.WaitGroup
 
 	// 发送队列
-	sendQueue *util.Pipe
+	sendQueue *cellnet.Pipe
 
 	cleanupGuard sync.Mutex
 
@@ -59,18 +59,24 @@ func (self *wsSession) recvLoop() {
 		msg, err := self.ReadMessage(self)
 
 		if err != nil {
+
+			log.Debugln(err)
+
 			if !util.IsEOFOrNetReadError(err) {
 				log.Errorln("session closed:", err)
 			}
 
-			self.PostEvent(&cellnet.RecvMsgEvent{self, &cellnet.SessionClosed{}})
+			self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self, Msg: &cellnet.SessionClosed{}})
 			break
 		}
 
-		self.PostEvent(&cellnet.RecvMsgEvent{self, msg})
+		self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self, Msg: msg})
 	}
 
-	self.cleanup()
+	self.Close()
+
+	// 通知完成
+	self.exitSync.Done()
 }
 
 // 发送循环
@@ -86,23 +92,13 @@ func (self *wsSession) sendLoop() {
 		for _, msg := range writeList {
 
 			// TODO SendMsgEvent并不是很有意义
-			self.SendMessage(&cellnet.SendMsgEvent{self, msg})
+			self.SendMessage(&cellnet.SendMsgEvent{Ses: self, Msg: msg})
 		}
 
 		if exit {
 			break
 		}
 	}
-
-	self.cleanup()
-}
-
-// 清理资源
-func (self *wsSession) cleanup() {
-
-	self.cleanupGuard.Lock()
-
-	defer self.cleanupGuard.Unlock()
 
 	// 关闭连接
 	if self.conn != nil {
@@ -124,7 +120,6 @@ func (self *wsSession) Start() {
 	self.exitSync.Add(2)
 
 	go func() {
-
 		// 等待2个任务结束
 		self.exitSync.Wait()
 
@@ -148,7 +143,7 @@ func newSession(conn *websocket.Conn, p cellnet.Peer, endNotify func()) *wsSessi
 	self := &wsSession{
 		conn:       conn,
 		endNotify:  endNotify,
-		sendQueue:  util.NewPipe(),
+		sendQueue:  cellnet.NewPipe(),
 		pInterface: p,
 		CoreProcBundle: p.(interface {
 			GetBundle() *peer.CoreProcBundle

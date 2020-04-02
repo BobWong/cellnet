@@ -6,17 +6,32 @@ import (
 
 type RecvMsgEvent struct {
 	Ses cellnet.Session
+	ack *RelayACK
 	Msg interface{}
-
-	ContextID []int64
 }
 
-func (self *RecvMsgEvent) OneContextID() int64 {
-	if len(self.ContextID) == 0 {
+func (self *RecvMsgEvent) PassThroughAsInt64() int64 {
+	if self.ack == nil {
 		return 0
 	}
 
-	return self.ContextID[0]
+	return self.ack.Int64
+}
+
+func (self *RecvMsgEvent) PassThroughAsInt64Slice() []int64 {
+	if self.ack == nil {
+		return nil
+	}
+
+	return self.ack.Int64Slice
+}
+
+func (self *RecvMsgEvent) PassThroughAsString() string {
+	if self.ack == nil {
+		return ""
+	}
+
+	return self.ack.Str
 }
 
 func (self *RecvMsgEvent) Session() cellnet.Session {
@@ -28,7 +43,9 @@ func (self *RecvMsgEvent) Message() interface{} {
 }
 
 // 消息原路返回
-func (self *RecvMsgEvent) RelayBack(msg interface{}) {
+func (self *RecvMsgEvent) Reply(msg interface{}) {
 
-	Relay(self.Ses, msg, self.ContextID...)
+	// 没填的值不会被发送
+	Relay(self.Ses, msg, self.ack.Int64, self.ack.Int64Slice, self.ack.Str)
+
 }

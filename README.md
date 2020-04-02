@@ -4,8 +4,8 @@
 
 [1]: https://godoc.org/github.com/bobwong89757/cellnet?status.svg
 [2]: https://godoc.org/github.com/bobwong89757/cellnet
-[3]: https://travis-ci.org/BobWong/cellnet.svg?branch=master
-[4]: https://travis-ci.org/BobWong/cellnet
+[3]: https://travis-ci.org/bobwong89757/cellnet.svg?branch=master
+[4]: https://travis-ci.org/bobwong89757/cellnet
 [5]: https://goreportcard.com/badge/github.com/bobwong89757/cellnet
 [6]: https://goreportcard.com/report/github.com/bobwong89757/cellnet
 [11]: https://img.shields.io/badge/license-MIT-blue.svg
@@ -46,6 +46,8 @@ cellnet经过多个版本的迭代，无论是作为初学者学习的范例，�
 
     侦听器的优雅重启, 支持json及form的收发及封装。编写游戏服务器时，不再需要使用第三方HTTP服务器对接SDK。
 
+    注: 如需要对接大规模网页, 请使用第三方专业网络库,如(https://github.com/gin-gonic/gin), cellnet的http支持主要目的在用统一的地址及peer管理
+
 - WebSocket
 
     采用(github.com/gorilla/websocket)实现
@@ -62,17 +64,21 @@ cellnet经过多个版本的迭代，无论是作为初学者学习的范例，�
 
        内存流直接序列化, 适用于服务器内网传输
 
+    - ProtoPlus(https://github.com/bobwong89757/protoplus)
+
+       增加并优化过的Protobuf的编码格式
+
     可以通过codec包自行添加新的编码格式
 
 * 支持混合编码收发
 
     无需改动代码，只需调整消息注册方式，即可达成运行期同时收发不同编码的封包
 
-    - 与Unity3D+Lua使用sproto通信
-
     - 与其他语言编写的服务器使用protobuf
 
     - 与web服务器使用json通信
+    
+    - 与Unity3D(C#)使用ProtoPlus(github.com/bobwong89757/protoplus)协议通信
 
     优点：
 
@@ -106,11 +112,13 @@ cellnet经过多个版本的迭代，无论是作为初学者学习的范例，�
 编译和使用cellnet，请下载Go1.10以上版本
 
 ```
-  go get -v github.com/bobwong89757/cellnet
+  go get -u -v github.com/bobwong89757/cellnet
 
-  go get -v github.com/bobwong89757/golog
+  go get -u -v github.com/bobwong89757/golog
 
-  go get -v github.com/bobwong89757/goobjfmt
+  go get -u -v github.com/bobwong89757/goobjfmt
+
+  go get -u -v github.com/bobwong89757/protoplus
 ```
 
 # 第三方库
@@ -300,6 +308,12 @@ sid1 say: hello
 
 这里应该有你想知道的答案
 
+# 基于cellnet的游戏服务器框架
+
+cellmesh
+https://github.com/bobwong89757/cellmesh
+
+
 # 贡献者
 
 按贡献时间排序，越靠前表示越新的贡献
@@ -332,8 +346,6 @@ viwii(viwii@sina.cn), 在v2中，提供一个可能造成死锁的bug
 
 感觉不错请star, 谢谢!
 
-开源讨论群: 527430600
-
-知乎: http://www.zhihu.com/people/sunicdavy
+知乎: http://www.zhihu.com/people/sunicbobwong89757
 
 提交bug及特性: https://github.com/bobwong89757/cellnet/issues

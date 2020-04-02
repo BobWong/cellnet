@@ -3,6 +3,7 @@ package rpc
 import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/msglog"
 )
 
 type RemoteCallMsg interface {
@@ -11,25 +12,24 @@ type RemoteCallMsg interface {
 	GetCallID() int64
 }
 
-func ResolveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, handled bool) {
+func ResolveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, handled bool, err error) {
 
 	if _, ok := inputEvent.(*RecvMsgEvent); ok {
-		return inputEvent, false
+		return inputEvent, false, nil
 	}
 
 	rpcMsg, ok := inputEvent.Message().(RemoteCallMsg)
 	if !ok {
-		return inputEvent, false
+		return inputEvent, false, nil
 	}
 
 	userMsg, _, err := codec.DecodeMessage(int(rpcMsg.GetMsgID()), rpcMsg.GetMsgData())
 
 	if err != nil {
-		return inputEvent, false
+		return inputEvent, false, err
 	}
 
-	if log.IsDebugEnabled() {
-
+	if msglog.IsMsgLogValid(int(rpcMsg.GetMsgID())) {
 		peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
 		log.Debugf("#rpc.recv(%s)@%d len: %d %s | %s",
@@ -47,7 +47,7 @@ func ResolveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, ha
 			inputEvent.Session(),
 			userMsg,
 			rpcMsg.GetCallID(),
-		}, true
+		}, true, nil
 
 	case *RemoteCallACK: // 客户端收到服务器的回应
 		request := getRequest(rpcMsg.GetCallID())
@@ -55,26 +55,25 @@ func ResolveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, ha
 			request.RecvFeedback(userMsg)
 		}
 
-		return inputEvent, true
+		return inputEvent, true, nil
 	}
 
-	return inputEvent, false
+	return inputEvent, false, nil
 }
 
-func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool) {
+func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool, err error) {
 	rpcMsg, ok := inputEvent.Message().(RemoteCallMsg)
 	if !ok {
-		return false
+		return false, nil
 	}
 
 	userMsg, _, err := codec.DecodeMessage(int(rpcMsg.GetMsgID()), rpcMsg.GetMsgData())
 
 	if err != nil {
-		return false
+		return false, err
 	}
 
-	if log.IsDebugEnabled() {
-
+	if msglog.IsMsgLogValid(int(rpcMsg.GetMsgID())) {
 		peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
 		log.Debugf("#rpc.send(%s)@%d len: %d %s | %s",
@@ -87,5 +86,5 @@ func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool) {
 
 	// 避免后续环节处理
 
-	return true
+	return true, nil
 }

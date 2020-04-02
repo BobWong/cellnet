@@ -16,9 +16,9 @@ type CoreContextSet struct {
 	ctxesGuard sync.RWMutex
 }
 
-func (self *CoreContextSet) GetContext(key, valuePtr interface{}) bool {
+func (self *CoreContextSet) FetchContext(key, valuePtr interface{}) bool {
 
-	pv, ok := self.RawGetContext(key)
+	pv, ok := self.GetContext(key)
 	if !ok {
 		return false
 	}
@@ -49,13 +49,19 @@ func (self *CoreContextSet) GetContext(key, valuePtr interface{}) bool {
 	default:
 		v := reflect.Indirect(reflect.ValueOf(valuePtr))
 
-		v.Set(reflect.ValueOf(pv))
+		// 避免call of reflect.Value.Set on zero Value
+		if pv == nil {
+			v.Set(reflect.Zero(v.Type()))
+		} else {
+			v.Set(reflect.ValueOf(pv))
+		}
+
 	}
 
 	return true
 }
 
-func (self *CoreContextSet) RawGetContext(key interface{}) (interface{}, bool) {
+func (self *CoreContextSet) GetContext(key interface{}) (interface{}, bool) {
 
 	self.ctxesGuard.RLock()
 	defer self.ctxesGuard.RUnlock()

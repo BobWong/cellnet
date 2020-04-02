@@ -1,8 +1,6 @@
 package udp
 
 import (
-	"expvar"
-	"fmt"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
@@ -18,51 +16,71 @@ type udpAcceptor struct {
 	peer.CoreContextSet
 	peer.CoreRunningTag
 	peer.CoreProcBundle
-
-	localAddr *net.UDPAddr
+	peer.CoreCaptureIOPanic
 
 	conn *net.UDPConn
 
-	sesQueue *util.Queue
+	sesTimeout       time.Duration
+	sesCleanTimeout  time.Duration
+	sesCleanLastTime time.Time
 
-	sesTimeout time.Duration
+	sesByConnTrack map[connTrackKey]*udpSession
+}
 
-	mtSesQueueCount      *expvar.Int
-	mtTotalRecvUDPPacket *expvar.Int
+func (self *udpAcceptor) IsReady() bool {
+
+	return self.IsRunning()
+}
+
+func (self *udpAcceptor) Port() int {
+	if self.conn == nil {
+		return 0
+	}
+
+	return self.conn.LocalAddr().(*net.UDPAddr).Port
 }
 
 func (self *udpAcceptor) Start() cellnet.Peer {
 
-	if self.mtSesQueueCount == nil {
-		self.mtSesQueueCount = expvar.NewInt(fmt.Sprintf("cellnet.Peer(%s).SessionQueueCount", self.Name()))
-	}
+	var finalAddr *util.Address
+	ln, err := util.DetectPort(self.Address(), func(a *util.Address, port int) (interface{}, error) {
 
-	if self.mtTotalRecvUDPPacket == nil {
-		self.mtTotalRecvUDPPacket = expvar.NewInt(fmt.Sprintf("cellnet.Peer(%s).TotalRecvUDPPacket", self.Name()))
-	}
+		addr, err := net.ResolveUDPAddr("udp", a.HostPortString(port))
+		if err != nil {
+			return nil, err
+		}
 
-	var err error
-	self.localAddr, err = net.ResolveUDPAddr("udp", self.Address())
+		finalAddr = a
+
+		return net.ListenUDP("udp", addr)
+	})
 
 	if err != nil {
 
-		log.Errorf("#udp.resolve failed(%s) %v", self.NameOrAddress(), err.Error())
+		log.Errorf("#udp.listen failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
-	self.conn, err = net.ListenUDP("udp", self.localAddr)
+	self.conn = ln.(*net.UDPConn)
 
-	if err != nil {
-		log.Errorf("#udp.listen failed(%s) %s", self.NameOrAddress(), err.Error())
-		self.SetRunning(false)
-		return self
-	}
-
-	log.Infof("#udp.listen(%s) %s", self.Name(), self.Address())
+	log.Infof("#udp.listen(%s) %s", self.Name(), finalAddr.String(self.Port()))
 
 	go self.accept()
 
 	return self
+}
+
+func (self *udpAcceptor) protectedRecvPacket(ses *udpSession, data []byte) {
+	defer func() {
+
+		if err := recover(); err != nil {
+			log.Errorf("IO panic: %s", err)
+			self.conn.Close()
+		}
+
+	}()
+
+	ses.Recv(data)
 }
 
 func (self *udpAcceptor) accept() {
@@ -78,11 +96,18 @@ func (self *udpAcceptor) accept() {
 			break
 		}
 
-		if n > 0 {
-			self.mtTotalRecvUDPPacket.Add(1)
+		self.checkTimeoutSession()
 
-			ses := self.allocSession(remoteAddr)
-			ses.Recv(recvBuff[:n])
+		if n > 0 {
+
+			ses := self.getSession(remoteAddr)
+
+			if self.CaptureIOPanic() {
+				self.protectedRecvPacket(ses, recvBuff[:n])
+			} else {
+				ses.Recv(recvBuff[:n])
+			}
+
 		}
 
 	}
@@ -91,41 +116,55 @@ func (self *udpAcceptor) accept() {
 
 }
 
-func (self *udpAcceptor) allocSession(addr *net.UDPAddr) *udpSession {
+// 检查超时session
+func (self *udpAcceptor) checkTimeoutSession() {
+	now := time.Now()
 
-	var ses *udpSession
-
-	if self.sesQueue.Count() > 0 {
-		ses = self.sesQueue.Peek().(*udpSession)
-
-		// 这个session还能用，需要重新new
-		if ses.IsAlive() {
-			ses = nil
-		} else {
-			// 可以复用
-			ses = self.sesQueue.Dequeue().(*udpSession)
+	// 定时清理超时的session
+	if now.After(self.sesCleanLastTime.Add(self.sesCleanTimeout)) {
+		sesToDelete := make([]*udpSession, 0, 10)
+		for _, ses := range self.sesByConnTrack {
+			if !ses.IsAlive() {
+				sesToDelete = append(sesToDelete, ses)
+			}
 		}
 
+		for _, ses := range sesToDelete {
+			delete(self.sesByConnTrack, *ses.key)
+		}
+
+		self.sesCleanLastTime = now
 	}
+}
+
+func (self *udpAcceptor) getSession(addr *net.UDPAddr) *udpSession {
+
+	key := newConnTrackKey(addr)
+
+	ses := self.sesByConnTrack[*key]
 
 	if ses == nil {
 		ses = &udpSession{}
-		self.sesQueue.Enqueue(ses)
+		ses.conn = self.conn
+		ses.remote = addr
+		ses.pInterface = self
+		ses.CoreProcBundle = &self.CoreProcBundle
+		ses.key = key
+		self.sesByConnTrack[*key] = ses
 	}
 
-	self.mtSesQueueCount.Set(int64(self.sesQueue.Count()))
-
+	// 续租
 	ses.timeOutTick = time.Now().Add(self.sesTimeout)
-	ses.conn = self.conn
-	ses.remote = addr
-	ses.pInterface = self
-	ses.CoreProcBundle = &self.CoreProcBundle
 
 	return ses
 }
 
 func (self *udpAcceptor) SetSessionTTL(dur time.Duration) {
 	self.sesTimeout = dur
+}
+
+func (self *udpAcceptor) SetSessionCleanTimeout(dur time.Duration) {
+	self.sesCleanTimeout = dur
 }
 
 func (self *udpAcceptor) Stop() {
@@ -146,8 +185,10 @@ func init() {
 
 	peer.RegisterPeerCreator(func() cellnet.Peer {
 		p := &udpAcceptor{
-			sesQueue:   util.NewQueue(64),
-			sesTimeout: time.Second,
+			sesTimeout:       time.Minute,
+			sesCleanTimeout:  time.Minute,
+			sesCleanLastTime: time.Now(),
+			sesByConnTrack:   make(map[connTrackKey]*udpSession),
 		}
 
 		return p

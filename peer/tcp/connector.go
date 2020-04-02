@@ -75,6 +75,17 @@ func (self *tcpConnector) SetReconnectDuration(v time.Duration) {
 	self.reconDur = v
 }
 
+func (self *tcpConnector) Port() int {
+
+	conn := self.defaultSes.Conn()
+
+	if conn == nil {
+		return 0
+	}
+
+	return conn.LocalAddr().(*net.TCPAddr).Port
+}
+
 const reportConnectFailedLimitTimes = 3
 
 // 连接器，传入连接地址和发送封包次数
@@ -88,25 +99,26 @@ func (self *tcpConnector) connect(address string) {
 		// 尝试用Socket连接地址
 		conn, err := net.Dial("tcp", address)
 
-		self.defaultSes.conn = conn
+		self.defaultSes.setConn(conn)
 
 		// 发生错误时退出
 		if err != nil {
 
 			if self.tryConnTimes <= reportConnectFailedLimitTimes {
-				log.Errorf("#tcp.connect failed(%s) %v", self.NameOrAddress(), err.Error())
-			}
+				log.Errorf("#tcp.connect failed(%s) %v", self.Name(), err.Error())
 
-			if self.tryConnTimes == reportConnectFailedLimitTimes {
-				log.Errorf("(%s) continue reconnecting, but mute log", self.NameOrAddress())
+				if self.tryConnTimes == reportConnectFailedLimitTimes {
+					log.Errorf("(%s) continue reconnecting, but mute log", self.Name())
+				}
 			}
 
 			// 没重连就退出
-			if self.ReconnectDuration() == 0 {
+			if self.ReconnectDuration() == 0 || self.IsStopping() {
 
-				log.Debugf("#tcp.connect failed(%s)@%d address: %s", self.Name(), self.defaultSes.ID(), self.Address())
-
-				self.PostEvent(&cellnet.RecvMsgEvent{self.defaultSes, &cellnet.SessionConnectError{}})
+				self.ProcEvent(&cellnet.RecvMsgEvent{
+					Ses: self.defaultSes,
+					Msg: &cellnet.SessionConnectError{},
+				})
 				break
 			}
 
@@ -125,11 +137,11 @@ func (self *tcpConnector) connect(address string) {
 
 		self.tryConnTimes = 0
 
-		self.PostEvent(&cellnet.RecvMsgEvent{self.defaultSes, &cellnet.SessionConnected{}})
+		self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self.defaultSes, Msg: &cellnet.SessionConnected{}})
 
 		self.sesEndSignal.Wait()
 
-		self.defaultSes.conn = nil
+		self.defaultSes.setConn(nil)
 
 		// 没重连就退出/主动退出
 		if self.IsStopping() || self.ReconnectDuration() == 0 {

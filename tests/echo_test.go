@@ -4,12 +4,13 @@ import (
 	"fmt"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/peer"
+	_ "github.com/bobwong89757/cellnet/peer/gorillaws"
 	_ "github.com/bobwong89757/cellnet/peer/tcp"
 	_ "github.com/bobwong89757/cellnet/peer/udp"
 	"github.com/bobwong89757/cellnet/proc"
+	_ "github.com/bobwong89757/cellnet/proc/gorillaws"
 	_ "github.com/bobwong89757/cellnet/proc/tcp"
 	_ "github.com/bobwong89757/cellnet/proc/udp"
-	"github.com/bobwong89757/cellnet/util"
 	"testing"
 	"time"
 )
@@ -18,7 +19,7 @@ type echoContext struct {
 	Address   string
 	Protocol  string
 	Processor string
-	Tester    *util.SignalTester
+	Tester    *SignalTester
 	Acceptor  cellnet.GenericPeer
 }
 
@@ -33,6 +34,12 @@ var (
 			Address:   "127.0.0.1:7702",
 			Protocol:  "udp",
 			Processor: "udp.ltv",
+		},
+
+		{
+			Address:   "127.0.0.1:7703",
+			Protocol:  "gorillaws",
+			Processor: "gorillaws.ltv",
 		},
 	}
 )
@@ -103,7 +110,7 @@ func runEcho(t *testing.T, index int) {
 
 	ctx := echoContexts[index]
 
-	ctx.Tester = util.NewSignalTester(t)
+	ctx.Tester = NewSignalTester(t)
 	ctx.Tester.SetTimeout(time.Hour)
 
 	echo_StartServer(ctx)
@@ -121,4 +128,9 @@ func TestEchoTCP(t *testing.T) {
 func TestEchoUDP(t *testing.T) {
 
 	runEcho(t, 1)
+}
+
+func TestEchoWS(t *testing.T) {
+
+	runEcho(t, 2)
 }

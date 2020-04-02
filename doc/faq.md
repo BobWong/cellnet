@@ -1,5 +1,23 @@
 # FAQ
 
+* 报错panic: Peer type not found怎么办?
+    
+    这是由于需要的peer没有找到或者没有注册，使用cellnet内建的peer请在main入口这样导入包
+```
+    import (
+        _ "github.com/bobwong89757/cellnet/peer/tcp"
+    )
+```
+
+* 报错panic: processor not found怎么办?
+
+    这是由于需要的processor没有找到或者没有注册，使用cellnet内建的processor请在main入口这样导入包
+```
+    import (
+        _ "github.com/bobwong89757/cellnet/proc/tcp"
+    )
+```
+
 * 这个代码的入口在哪里? 怎么编译为exe?
 
     本代码是一个网络库, 需要根据需求, 整合逻辑
@@ -22,7 +40,11 @@
 
 * cellnet有网关和db支持么?
 
-   使用Peer/Processor可以将mysql,redis封装为标准统一的接口
+   github.com/bobwong89757/cellnet/peer/mysql   MySQL支持
+   
+   github.com/bobwong89757/cellnet/peer/redis   Redis支持
+   
+   使用方法请参考tests
 
 * 如何关闭调试消息日志?
 
@@ -61,3 +83,7 @@
    超过MTU后，在某些路由器将发生封包重传，导致传输性能下降，严重的导致丢包乃至连接断开。
 
    cellnet底层没有拆分逻辑包的设计，请自行使用Processor扩展。
+
+* 如何获取会话的远程IP?
+
+   util.GetRemoteAddrss获取到地址, util.SpliteAddress拆分出host部分就是ip

@@ -30,3 +30,19 @@ func TestWriteFull(t *testing.T) {
 
 	t.Log(m.Bytes())
 }
+
+func TestCompressBytes(t *testing.T) {
+
+	data := []byte("hello")
+
+	data, err := CompressBytes(data)
+	if err != nil {
+		t.FailNow()
+	}
+
+	t.Log(DecompressBytes(data))
+}
+
+func TestStackToString(t *testing.T) {
+	t.Log(StackToString(5))
+}

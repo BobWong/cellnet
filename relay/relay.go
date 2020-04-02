@@ -7,11 +7,11 @@ import (
 )
 
 var (
-	ErrInvalidPeerSession = errors.New("relay: Require cellnet.Session")
+	ErrInvalidPeerSession = errors.New("Require valid cellnet.Session or cellnet.TCPConnector")
 )
 
-// sesDetector: 提供要发送到的目标session， 发送msg消息，并携带ContextID
-func Relay(sesDetector, msg interface{}, contextIDList ...int64) error {
+// payload: msg/bytes   passthrough: int64, []int64, string
+func Relay(sesDetector interface{}, dataList ...interface{}) error {
 
 	ses, err := getSession(sesDetector)
 	if err != nil {
@@ -19,18 +19,36 @@ func Relay(sesDetector, msg interface{}, contextIDList ...int64) error {
 		return err
 	}
 
-	data, meta, err := codec.EncodeMessage(msg, nil)
+	var ack RelayACK
 
-	if err != nil {
-		log.Errorln("relay.Relay:", err)
-		return err
+	for _, payload := range dataList {
+		switch value := payload.(type) {
+		case int64:
+			ack.Int64 = value
+		case []int64:
+			ack.Int64Slice = value
+
+		case string:
+			ack.Str = value
+		case []byte: // 作为payload
+			ack.Bytes = value
+		default:
+			if ack.MsgID == 0 {
+				var meta *cellnet.MessageMeta
+				ack.Msg, meta, err = codec.EncodeMessage(payload, nil)
+
+				if err != nil {
+					return err
+				}
+
+				ack.MsgID = uint32(meta.ID)
+			} else {
+				panic("Multi message relay not support")
+			}
+
+		}
 	}
-
-	ses.Send(&RelayACK{
-		MsgID:     uint16(meta.ID),
-		Data:      data, // 这里的data不能做内存池回收
-		ContextID: contextIDList,
-	})
+	ses.Send(&ack)
 
 	return nil
 }

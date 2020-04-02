@@ -25,7 +25,7 @@ func (self *udpConnector) Start() cellnet.Peer {
 
 	if err != nil {
 
-		log.Errorf("#resolve udp address failed(%s) %v", self.NameOrAddress(), err.Error())
+		log.Errorf("#resolve udp address failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
@@ -38,20 +38,25 @@ func (self *udpConnector) Session() cellnet.Session {
 	return self.defaultSes
 }
 
+func (self *udpConnector) IsReady() bool {
+
+	return self.defaultSes.Conn() != nil
+}
+
 func (self *udpConnector) connect() {
 
 	conn, err := net.DialUDP("udp", nil, self.remoteAddr)
 	if err != nil {
 
-		log.Errorf("#udp.connect failed(%s) %v", self.NameOrAddress(), err.Error())
+		log.Errorf("#udp.connect failed(%s) %v", self.Name(), err.Error())
 		return
 	}
 
-	self.defaultSes.conn = conn
+	self.defaultSes.setConn(conn)
 
 	ses := self.defaultSes
 
-	self.PostEvent(&cellnet.RecvMsgEvent{ses, &cellnet.SessionConnected{}})
+	self.ProcEvent(&cellnet.RecvMsgEvent{ses, &cellnet.SessionConnected{}})
 
 	recvBuff := make([]byte, MaxUDPRecvBuffer)
 
@@ -75,8 +80,8 @@ func (self *udpConnector) Stop() {
 
 	self.SetRunning(false)
 
-	if self.defaultSes.conn != nil {
-		self.defaultSes.conn.Close()
+	if c := self.defaultSes.Conn(); c != nil {
+		c.Close()
 	}
 }
 
