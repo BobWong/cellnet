@@ -4,8 +4,8 @@
 
 [1]: https://godoc.org/github.com/bobwong89757/cellnet?status.svg
 [2]: https://godoc.org/github.com/bobwong89757/cellnet
-[3]: https://travis-ci.org/bobwong89757/cellnet.svg?branch=master
-[4]: https://travis-ci.org/bobwong89757/cellnet
+[3]: https://travis-ci.org/davyxu/cellnet.svg?branch=master
+[4]: https://travis-ci.org/davyxu/cellnet
 [5]: https://goreportcard.com/badge/github.com/bobwong89757/cellnet
 [6]: https://goreportcard.com/report/github.com/bobwong89757/cellnet
 [11]: https://img.shields.io/badge/license-MIT-blue.svg
@@ -346,6 +346,6 @@ viwii(viwii@sina.cn), 在v2中，提供一个可能造成死锁的bug
 
 感觉不错请star, 谢谢!
 
-知乎: http://www.zhihu.com/people/sunicbobwong89757
+知乎: http://www.zhihu.com/people/sunicdavy
 
 提交bug及特性: https://github.com/bobwong89757/cellnet/issues
