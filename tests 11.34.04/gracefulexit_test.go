@@ -106,30 +106,30 @@ func TestCreateDestroyAcceptor(t *testing.T) {
 
 	queue.StartLoop()
 
-	log.Debugln("Start connecting...")
+	log.Debug("Start connecting...")
 	allAccepted.Add(recreateAcc_clientConnection)
 	runMultiConnection()
 
-	log.Debugln("Wait all accept...")
+	log.Debug("Wait all accept...")
 	allAccepted.Wait()
 
-	log.Debugln("Close acceptor...")
+	log.Debug("Close acceptor...")
 	p.Stop()
 
 	// 确认所有连接已经断开
 	time.Sleep(time.Second)
 
-	log.Debugln("Session count:", p.(cellnet.SessionAccessor).SessionCount())
+	log.Debug("Session count:", p.(cellnet.SessionAccessor).SessionCount())
 
 	p.Start()
-	log.Debugln("Start connecting...")
+	log.Debug("Start connecting...")
 	allAccepted.Add(recreateAcc_clientConnection)
 	runMultiConnection()
 
-	log.Debugln("Wait all accept...")
+	log.Debug("Wait all accept...")
 	allAccepted.Wait()
 
-	log.Debugln("All done")
+	log.Debug("All done")
 }
 
 func runMultiConnection() {

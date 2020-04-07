@@ -1,25 +1,22 @@
 package main
 
 import (
+	"github.com/bobwong89757/golog/logs"
 	"io/ioutil"
 	"os"
 
 	"bytes"
-	"github.com/bobwong89757/golog"
 	"github.com/bobwong89757/pbmeta"
 	"github.com/gogo/protobuf/proto"
 	pbprotos "github.com/gogo/protobuf/protoc-gen-gogo/descriptor"
 	plugin "github.com/gogo/protobuf/protoc-gen-gogo/plugin"
 )
 
-var log = golog.New("main")
+var log = logs.GetBeeLogger()
 
 func main() {
 
 	var errBuffer bytes.Buffer
-
-	golog.SetOutput("main", &errBuffer)
-
 	var Request plugin.CodeGeneratorRequest   // The input.
 	var Response plugin.CodeGeneratorResponse // The output.
 
@@ -40,18 +37,18 @@ func main() {
 	// 读取protoc请求
 	data, err := ioutil.ReadAll(os.Stdin)
 	if err != nil {
-		log.Errorln("reading input")
+		log.Error("reading input")
 		os.Exit(1)
 	}
 
 	// 解析请求
 	if err := proto.Unmarshal(data, &Request); err != nil {
-		log.Errorln("parsing input proto")
+		log.Error("parsing input proto")
 		os.Exit(1)
 	}
 
 	if len(Request.FileToGenerate) == 0 {
-		log.Errorln("no files to generate")
+		log.Error("no files to generate")
 		os.Exit(1)
 	}
 

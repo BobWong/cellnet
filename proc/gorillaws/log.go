@@ -1,7 +1,7 @@
 package gorillaws
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("gorillawsproc")
+var log = logs.GetBeeLogger()

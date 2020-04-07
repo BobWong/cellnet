@@ -11,7 +11,6 @@ import (
 	"github.com/bobwong89757/cellnet/proc"
 	_ "github.com/bobwong89757/cellnet/proc/tcp"
 	"github.com/bobwong89757/cellnet/util"
-	"github.com/bobwong89757/golog"
 	"log"
 	"os"
 	"reflect"
@@ -122,7 +121,6 @@ func main() {
 		log.Println(*profile)
 	}
 
-	golog.SetLevelByString("tcpproc", "info")
 
 	server()
 

@@ -105,10 +105,10 @@ func (self *tcpConnector) connect(address string) {
 		if err != nil {
 
 			if self.tryConnTimes <= reportConnectFailedLimitTimes {
-				log.Errorf("#tcp.connect failed(%s) %v", self.Name(), err.Error())
+				log.Error("#tcp.connect failed(%s) %v", self.Name(), err.Error())
 
 				if self.tryConnTimes == reportConnectFailedLimitTimes {
-					log.Errorf("(%s) continue reconnecting, but mute log", self.Name())
+					log.Error("(%s) continue reconnecting, but mute log", self.Name())
 				}
 			}
 

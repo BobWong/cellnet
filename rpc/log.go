@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("rpc")
+var log = logs.GetBeeLogger()

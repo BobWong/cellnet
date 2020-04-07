@@ -1,7 +1,7 @@
 package udp
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("udpproc")
+var log = logs.GetBeeLogger()

@@ -13,7 +13,7 @@ func sendPacket(writer udp.DataWriter, ctx cellnet.ContextSet, msg interface{}) 
 	msgData, meta, err := codec.EncodeMessage(msg, ctx)
 
 	if err != nil {
-		log.Errorf("send message encode error: %s", err)
+		log.Error("send message encode error: %s", err)
 		return err
 	}
 

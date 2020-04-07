@@ -57,13 +57,13 @@ func (self *udpAcceptor) Start() cellnet.Peer {
 
 	if err != nil {
 
-		log.Errorf("#udp.listen failed(%s) %v", self.Name(), err.Error())
+		log.Error("#udp.listen failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
 	self.conn = ln.(*net.UDPConn)
 
-	log.Infof("#udp.listen(%s) %s", self.Name(), finalAddr.String(self.Port()))
+	log.Info("#udp.listen(%s) %s", self.Name(), finalAddr.String(self.Port()))
 
 	go self.accept()
 
@@ -74,7 +74,7 @@ func (self *udpAcceptor) protectedRecvPacket(ses *udpSession, data []byte) {
 	defer func() {
 
 		if err := recover(); err != nil {
-			log.Errorf("IO panic: %s", err)
+			log.Error("IO panic: %s", err)
 			self.conn.Close()
 		}
 

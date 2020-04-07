@@ -100,7 +100,7 @@ func (self *HTMLRespond) WriteRespond(ses *httpSession) error {
 
 	peerInfo := ses.Peer().(cellnet.PeerProperty)
 
-	log.Debugf("#http.send(%s) '%s' %s | [%d] HTML %s",
+	log.Debug("#http.send(%s) '%s' %s | [%d] HTML %s",
 		peerInfo.Name(),
 		ses.req.Method,
 		ses.req.URL.Path,
@@ -133,16 +133,14 @@ type TextRespond struct {
 
 func (self *TextRespond) WriteRespond(ses *httpSession) error {
 
-	if log.IsDebugEnabled() {
-		peerInfo := ses.Peer().(cellnet.PeerProperty)
+	peerInfo := ses.Peer().(cellnet.PeerProperty)
 
-		log.Debugf("#http.send(%s) '%s' %s | [%d] HTML '%s'",
-			peerInfo.Name(),
-			ses.req.Method,
-			ses.req.URL.Path,
-			self.StatusCode,
-			self.Text)
-	}
+	log.Debug("#http.send(%s) '%s' %s | [%d] HTML '%s'",
+		peerInfo.Name(),
+		ses.req.Method,
+		ses.req.URL.Path,
+		self.StatusCode,
+		self.Text)
 
 	ses.resp.Header().Set("Content-Type", "text/html;charset=utf-8")
 	ses.resp.WriteHeader(self.StatusCode)

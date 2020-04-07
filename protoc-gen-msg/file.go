@@ -73,7 +73,7 @@ func printFile(pool *pbmeta.DescriptorPool) (string, bool) {
 
 	tpl, err := template.New("msgid").Parse(codeTemplate)
 	if err != nil {
-		log.Errorln(err)
+		log.Error(err.Error())
 		return "", false
 	}
 
@@ -113,13 +113,13 @@ func printFile(pool *pbmeta.DescriptorPool) (string, bool) {
 
 	err = tpl.Execute(&bf, &model)
 	if err != nil {
-		log.Errorln(err)
+		log.Error(err.Error())
 		return "", false
 	}
 
 	err = formatCode(&bf)
 	if err != nil {
-		log.Errorln(err)
+		log.Error(err.Error())
 		return "", false
 	}
 

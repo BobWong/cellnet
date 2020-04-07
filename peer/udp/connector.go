@@ -25,7 +25,7 @@ func (self *udpConnector) Start() cellnet.Peer {
 
 	if err != nil {
 
-		log.Errorf("#resolve udp address failed(%s) %v", self.Name(), err.Error())
+		log.Error("#resolve udp address failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
@@ -48,7 +48,7 @@ func (self *udpConnector) connect() {
 	conn, err := net.DialUDP("udp", nil, self.remoteAddr)
 	if err != nil {
 
-		log.Errorf("#udp.connect failed(%s) %v", self.Name(), err.Error())
+		log.Error("#udp.connect failed(%s) %v", self.Name(), err.Error())
 		return
 	}
 

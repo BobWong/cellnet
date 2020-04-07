@@ -55,14 +55,12 @@ func (self *MessageRespond) WriteRespond(ses *httpSession) error {
 		return err
 	}
 
-	if log.IsDebugEnabled() {
-		log.Debugf("#http.send(%s) '%s' %s | [%d] %s",
-			peerInfo.Name(),
-			ses.req.Method,
-			ses.req.URL.Path,
-			self.StatusCode,
-			string(bodyData))
-	}
+	log.Debug("#http.send(%s) '%s' %s | [%d] %s",
+		peerInfo.Name(),
+		ses.req.Method,
+		ses.req.URL.Path,
+		self.StatusCode,
+		string(bodyData))
 
 	ses.resp.Write(bodyData)
 

@@ -51,7 +51,7 @@ func (self *tcpAcceptor) Start() cellnet.Peer {
 
 	if err != nil {
 
-		log.Errorf("#tcp.listen failed(%s) %v", self.Name(), err.Error())
+		log.Error("#tcp.listen failed(%s) %v", self.Name(), err.Error())
 
 		self.SetRunning(false)
 
@@ -101,7 +101,7 @@ func (self *tcpAcceptor) accept() {
 			}
 
 			// 调试状态时, 才打出accept的具体错误
-			log.Errorf("#tcp.accept failed(%s) %v", self.Name(), err.Error())
+			log.Error("#tcp.accept failed(%s) %v", self.Name(), err.Error())
 			break
 		}
 	}

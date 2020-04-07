@@ -4,22 +4,21 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"github.com/bobwong89757/golog/logs"
 	"net/http"
 	"reflect"
 	"time"
 
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
-	"github.com/bobwong89757/cellnet/peer"
-	"github.com/bobwong89757/cellnet/proc"
-	"github.com/bobwong89757/golog"
-
 	_ "github.com/bobwong89757/cellnet/codec/json"
+	"github.com/bobwong89757/cellnet/peer"
 	_ "github.com/bobwong89757/cellnet/peer/gorillaws"
+	"github.com/bobwong89757/cellnet/proc"
 	_ "github.com/bobwong89757/cellnet/proc/gorillaws"
 )
 
-var log = golog.New("websocket_server")
+var log = logs.GetBeeLogger()
 
 type TestEchoACK struct {
 	Msg   string
@@ -57,7 +56,7 @@ func client() {
 		switch msg := ev.Message().(type) {
 
 		case *cellnet.SessionConnected:
-			log.Debugln("server connected")
+			log.Debug("server connected")
 
 			ev.Session().Send(&TestEchoACK{
 				Msg:   "鲍勃",
@@ -65,10 +64,10 @@ func client() {
 			})
 			// 有连接断开
 		case *cellnet.SessionClosed:
-			log.Debugln("session closed: ", ev.Session().ID())
+			log.Debug("session closed: ", ev.Session().ID())
 		case *TestEchoACK:
 
-			log.Debugf("recv: %+v %v", msg, []byte("鲍勃"))
+			log.Debug("recv: %+v %v", msg, []byte("鲍勃"))
 
 		}
 	})
@@ -95,19 +94,19 @@ func server() {
 		switch msg := ev.Message().(type) {
 
 		case *cellnet.SessionAccepted:
-			log.Debugln("server accepted")
+			log.Debug("server accepted")
 			// 有连接断开
 		case *cellnet.SessionClosed:
-			log.Debugln("session closed: ", ev.Session().ID())
+			log.Debug("session closed: ", ev.Session().ID())
 		case *TestEchoACK:
 
-			log.Debugf("recv: %+v %v", msg, []byte("鲍勃"))
+			log.Debug("recv: %+v %v", msg, []byte("鲍勃"))
 
 			val, exist := ev.Session().(cellnet.ContextSet).GetContext("request")
 			if exist {
 				if req, ok := val.(*http.Request); ok {
 					raw, _ := json.Marshal(req.Header)
-					log.Debugf("origin request header: %s", string(raw))
+					log.Debug("origin request header: %s", string(raw))
 				}
 			}
 

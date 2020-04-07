@@ -76,7 +76,7 @@ func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool, err error) {
 	if msglog.IsMsgLogValid(int(rpcMsg.GetMsgID())) {
 		peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
-		log.Debugf("#rpc.send(%s)@%d len: %d %s | %s",
+		log.Debug("#rpc.send(%s)@%d len: %d %s | %s",
 			peerInfo.Name(),
 			inputEvent.Session().ID(),
 			cellnet.MessageSize(userMsg),

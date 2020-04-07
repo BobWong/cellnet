@@ -1,7 +1,7 @@
 package redix
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("redix")
+var log = logs.GetBeeLogger()

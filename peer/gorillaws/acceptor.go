@@ -61,7 +61,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 	})
 
 	if err != nil {
-		log.Errorf("#ws.listen failed(%s) %v", self.Name(), err.Error())
+		log.Error("#ws.listen failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
@@ -77,7 +77,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 
 		c, err := self.upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Debugln(err)
+			log.Debug(err.Error())
 			return
 		}
 
@@ -93,7 +93,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 
 	go func() {
 
-		log.Infof("#ws.listen(%s) %s", self.Name(), addrObj.String(self.Port()))
+		log.Info("#ws.listen(%s) %s", self.Name(), addrObj.String(self.Port()))
 
 		if self.certfile != "" && self.keyfile != "" {
 			err = self.sv.ServeTLS(self.listener, self.certfile, self.keyfile)
@@ -102,7 +102,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 		}
 
 		if err != nil {
-			log.Errorf("#ws.listen. failed(%s) %v", self.Name(), err.Error())
+			log.Error("#ws.listen. failed(%s) %v", self.Name(), err.Error())
 		}
 
 	}()

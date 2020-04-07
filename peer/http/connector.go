@@ -48,14 +48,12 @@ func (self *httpConnector) Request(method, path string, param *cellnet.HTTPReque
 	reqCodec := getCodec(param.REQCodecName)
 	data, err := reqCodec.Encode(param.REQMsg, nil)
 
-	if log.IsDebugEnabled() {
-		log.Debugf("#http.send(%s) '%s' %s | Message(%s) %s",
-			self.Name(),
-			method,
-			path,
-			getTypeName(param.REQMsg),
-			cellnet.MessageToString(param.REQMsg))
-	}
+	log.Debug("#http.send(%s) '%s' %s | Message(%s) %s",
+		self.Name(),
+		method,
+		path,
+		getTypeName(param.REQMsg),
+		cellnet.MessageToString(param.REQMsg))
 
 	url := fmt.Sprintf("http://%s%s", self.Address(), path)
 
@@ -80,15 +78,13 @@ func (self *httpConnector) Request(method, path string, param *cellnet.HTTPReque
 
 	err = getCodec(param.ACKCodecName).Decode(resp.Body, param.ACKMsg)
 
-	if log.IsDebugEnabled() {
-		log.Debugf("#http.recv(%s) '%s' %s | [%d] Message(%s) %s",
-			self.Name(),
-			resp.Request.Method,
-			path,
-			resp.StatusCode,
-			getTypeName(param.ACKMsg),
-			cellnet.MessageToString(param.ACKMsg))
-	}
+	log.Debug("#http.recv(%s) '%s' %s | [%d] Message(%s) %s",
+		self.Name(),
+		resp.Request.Method,
+		path,
+		resp.StatusCode,
+		getTypeName(param.ACKMsg),
+		cellnet.MessageToString(param.ACKMsg))
 
 	return err
 }

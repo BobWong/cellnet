@@ -28,7 +28,7 @@ func TestAfterTimer(t *testing.T) {
 			t.FailNow()
 		}
 
-		log.Debugln("after 200 ms")
+		log.Debug("after 200 ms")
 
 		signal.Done(2)
 	}, "context")
@@ -53,7 +53,7 @@ func TestLoopTimer(t *testing.T) {
 	// 启动计时循环
 	timer.NewLoop(queue, time.Millisecond*10, func(ctx *timer.Loop) {
 
-		log.Debugln("tick 10 ms", count)
+		log.Debug("tick 10 ms", count)
 
 		count++
 

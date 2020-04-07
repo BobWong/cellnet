@@ -30,7 +30,7 @@ func (self *RecvMsgEvent) Reply(msg interface{}) {
 	data, meta, err := codec.EncodeMessage(msg, nil)
 
 	if err != nil {
-		log.Errorf("rpc reply message encode error: %s", err)
+		log.Error("rpc reply message encode error: %s", err)
 		return
 	}
 

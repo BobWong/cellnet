@@ -1,7 +1,7 @@
 package mysql
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("mysql")
+var log = logs.GetBeeLogger()

@@ -1,7 +1,7 @@
 package tcp
 
 import (
-	"github.com/bobwong89757/golog"
+	"github.com/bobwong89757/golog/logs"
 )
 
-var log = golog.New("tcppeer")
+var log = logs.GetBeeLogger()
