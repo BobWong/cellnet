@@ -60,7 +60,7 @@ func (self *tcpAcceptor) Start() cellnet.Peer {
 
 	self.listener = ln.(net.Listener)
 
-	log.Infof("#tcp.listen(%s) %s", self.Name(), self.ListenAddress())
+	log.Info("#tcp.listen(%s) %s", self.Name(), self.ListenAddress())
 
 	go self.accept()
 
