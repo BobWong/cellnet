@@ -4,17 +4,15 @@ import (
 	"bufio"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/examples/chat/proto"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/proc"
-	"github.com/bobwong89757/golog/logs"
 	"os"
 	"strings"
 
 	_ "github.com/bobwong89757/cellnet/peer/tcp"
 	_ "github.com/bobwong89757/cellnet/proc/tcp"
 )
-
-var log = logs.GetBeeLogger()
 
 func ReadConsole(callback func(string)) {
 
@@ -48,11 +46,11 @@ func main() {
 	proc.BindProcessorHandler(p, "tcp.ltv", func(ev cellnet.Event) {
 		switch msg := ev.Message().(type) {
 		case *cellnet.SessionConnected:
-			log.Debug("client connected")
+			log.GetLog().Debug("client connected")
 		case *cellnet.SessionClosed:
-			log.Debug("client error")
+			log.GetLog().Debug("client error")
 		case *proto.ChatACK:
-			log.Info("sid%d say: %s", msg.Id, msg.Content)
+			log.GetLog().Info("sid%d say: %s", msg.Id, msg.Content)
 		}
 	})
 
@@ -62,7 +60,7 @@ func main() {
 	// 事件队列开始循环
 	queue.StartLoop()
 
-	log.Debug("Ready to chat!")
+	log.GetLog().Debug("Ready to chat!")
 
 	// 阻塞的从命令行获取聊天输入
 	ReadConsole(func(str string) {

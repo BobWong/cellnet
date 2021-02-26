@@ -3,6 +3,7 @@ package rpc
 import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/msglog"
 )
 
@@ -32,7 +33,7 @@ func ResolveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, ha
 	if msglog.IsMsgLogValid(int(rpcMsg.GetMsgID())) {
 		peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
-		log.Debug("#rpc.recv(%s)@%d len: %d %s | %s",
+		log.GetLog().Debug("#rpc.recv(%s)@%d len: %d %s | %s",
 			peerInfo.Name(),
 			inputEvent.Session().ID(),
 			cellnet.MessageSize(userMsg),
@@ -76,7 +77,7 @@ func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool, err error) {
 	if msglog.IsMsgLogValid(int(rpcMsg.GetMsgID())) {
 		peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
-		log.Debug("#rpc.send(%s)@%d len: %d %s | %s",
+		log.GetLog().Debug("#rpc.send(%s)@%d len: %d %s | %s",
 			peerInfo.Name(),
 			inputEvent.Session().ID(),
 			cellnet.MessageSize(userMsg),

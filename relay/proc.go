@@ -3,6 +3,7 @@ package relay
 import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/msglog"
 )
 
@@ -35,7 +36,7 @@ func ResoleveInboundEvent(inputEvent cellnet.Event) (ouputEvent cellnet.Event, h
 
 			peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
-			log.Debug("#relay.recv(%s)@%d len: %d %s {%s}| %s",
+			log.GetLog().Debug("#relay.recv(%s)@%d len: %d %s {%s}| %s",
 				peerInfo.Name(),
 				inputEvent.Session().ID(),
 				cellnet.MessageSize(ev.Message()),
@@ -75,7 +76,7 @@ func ResolveOutboundEvent(inputEvent cellnet.Event) (handled bool, err error) {
 
 			peerInfo := inputEvent.Session().Peer().(cellnet.PeerProperty)
 
-			log.Debug("#relay.send(%s)@%d len: %d %s {%s}| %s",
+			log.GetLog().Debug("#relay.send(%s)@%d len: %d %s {%s}| %s",
 				peerInfo.Name(),
 				inputEvent.Session().ID(),
 				cellnet.MessageSize(payload),

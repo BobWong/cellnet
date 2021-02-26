@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
-	"github.com/bobwong89757/golog/logs"
+	"github.com/bobwong89757/cellnet/log"
 	"net/http"
 	"reflect"
 	"time"
@@ -17,8 +17,6 @@ import (
 	"github.com/bobwong89757/cellnet/proc"
 	_ "github.com/bobwong89757/cellnet/proc/gorillaws"
 )
-
-var log = logs.GetBeeLogger()
 
 type TestEchoACK struct {
 	Msg   string
@@ -56,7 +54,7 @@ func client() {
 		switch msg := ev.Message().(type) {
 
 		case *cellnet.SessionConnected:
-			log.Debug("server connected")
+			log.GetLog().Debug("server connected")
 
 			ev.Session().Send(&TestEchoACK{
 				Msg:   "鲍勃",
@@ -64,10 +62,10 @@ func client() {
 			})
 			// 有连接断开
 		case *cellnet.SessionClosed:
-			log.Debug("session closed: ", ev.Session().ID())
+			log.GetLog().Debug("session closed: ", ev.Session().ID())
 		case *TestEchoACK:
 
-			log.Debug("recv: %+v %v", msg, []byte("鲍勃"))
+			log.GetLog().Debug("recv: %+v %v", msg, []byte("鲍勃"))
 
 		}
 	})
@@ -94,19 +92,19 @@ func server() {
 		switch msg := ev.Message().(type) {
 
 		case *cellnet.SessionAccepted:
-			log.Debug("server accepted")
+			log.GetLog().Debug("server accepted")
 			// 有连接断开
 		case *cellnet.SessionClosed:
-			log.Debug("session closed: ", ev.Session().ID())
+			log.GetLog().Debug("session closed: ", ev.Session().ID())
 		case *TestEchoACK:
 
-			log.Debug("recv: %+v %v", msg, []byte("鲍勃"))
+			log.GetLog().Debug("recv: %+v %v", msg, []byte("鲍勃"))
 
 			val, exist := ev.Session().(cellnet.ContextSet).GetContext("request")
 			if exist {
 				if req, ok := val.(*http.Request); ok {
 					raw, _ := json.Marshal(req.Header)
-					log.Debug("origin request header: %s", string(raw))
+					log.GetLog().Debug("origin request header: %s", string(raw))
 				}
 			}
 

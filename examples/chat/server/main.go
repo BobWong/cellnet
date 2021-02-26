@@ -3,15 +3,12 @@ package main
 import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/examples/chat/proto"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
-	"github.com/bobwong89757/cellnet/proc"
-	"github.com/bobwong89757/golog/logs"
-
 	_ "github.com/bobwong89757/cellnet/peer/tcp"
+	"github.com/bobwong89757/cellnet/proc"
 	_ "github.com/bobwong89757/cellnet/proc/tcp"
 )
-
-var log = logs.GetBeeLogger()
 
 func main() {
 
@@ -28,10 +25,10 @@ func main() {
 		switch msg := ev.Message().(type) {
 		// 有新的连接
 		case *cellnet.SessionAccepted:
-			log.Debug("server accepted")
+			log.GetLog().Debug("server accepted")
 		// 有连接断开
 		case *cellnet.SessionClosed:
-			log.Debug("session closed: ", ev.Session().ID())
+			log.GetLog().Debug("session closed: ", ev.Session().ID())
 		// 收到某个连接的ChatREQ消息
 		case *proto.ChatREQ:
 

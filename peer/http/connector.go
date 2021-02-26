@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"io"
 	"net/http"
@@ -48,7 +49,7 @@ func (self *httpConnector) Request(method, path string, param *cellnet.HTTPReque
 	reqCodec := getCodec(param.REQCodecName)
 	data, err := reqCodec.Encode(param.REQMsg, nil)
 
-	log.Debug("#http.send(%s) '%s' %s | Message(%s) %s",
+	log.GetLog().Debug("#http.send(%s) '%s' %s | Message(%s) %s",
 		self.Name(),
 		method,
 		path,
@@ -78,7 +79,7 @@ func (self *httpConnector) Request(method, path string, param *cellnet.HTTPReque
 
 	err = getCodec(param.ACKCodecName).Decode(resp.Body, param.ACKMsg)
 
-	log.Debug("#http.recv(%s) '%s' %s | [%d] Message(%s) %s",
+	log.GetLog().Debug("#http.recv(%s) '%s' %s | [%d] Message(%s) %s",
 		self.Name(),
 		resp.Request.Method,
 		path,

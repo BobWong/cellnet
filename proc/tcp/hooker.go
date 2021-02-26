@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/msglog"
 	"github.com/bobwong89757/cellnet/relay"
 	"github.com/bobwong89757/cellnet/rpc"
@@ -19,7 +20,7 @@ func (self MsgHooker) OnInboundEvent(inputEvent cellnet.Event) (outputEvent cell
 	inputEvent, handled, err = rpc.ResolveInboundEvent(inputEvent)
 
 	if err != nil {
-		log.Error("rpc.ResolveInboundEvent:", err)
+		log.GetLog().Error("rpc.ResolveInboundEvent:", err)
 		return
 	}
 
@@ -28,12 +29,12 @@ func (self MsgHooker) OnInboundEvent(inputEvent cellnet.Event) (outputEvent cell
 		inputEvent, handled, err = relay.ResoleveInboundEvent(inputEvent)
 
 		if err != nil {
-			log.Error("relay.ResoleveInboundEvent:", err)
+			log.GetLog().Error("relay.ResoleveInboundEvent:", err)
 			return
 		}
 
 		if !handled {
-			msglog.WriteRecvLogger(log, "tcp", inputEvent.Session(), inputEvent.Message())
+			msglog.WriteRecvLogger("tcp", inputEvent.Session(), inputEvent.Message())
 		}
 	}
 
@@ -45,7 +46,7 @@ func (self MsgHooker) OnOutboundEvent(inputEvent cellnet.Event) (outputEvent cel
 	handled, err := rpc.ResolveOutboundEvent(inputEvent)
 
 	if err != nil {
-		log.Error("rpc.ResolveOutboundEvent:", err)
+		log.GetLog().Error("rpc.ResolveOutboundEvent:", err)
 		return nil
 	}
 
@@ -54,12 +55,12 @@ func (self MsgHooker) OnOutboundEvent(inputEvent cellnet.Event) (outputEvent cel
 		handled, err = relay.ResolveOutboundEvent(inputEvent)
 
 		if err != nil {
-			log.Error("relay.ResolveOutboundEvent:", err)
+			log.GetLog().Error("relay.ResolveOutboundEvent:", err)
 			return nil
 		}
 
 		if !handled {
-			msglog.WriteSendLogger(log, "tcp", inputEvent.Session(), inputEvent.Message())
+			msglog.WriteSendLogger("tcp", inputEvent.Session(), inputEvent.Message())
 		}
 	}
 

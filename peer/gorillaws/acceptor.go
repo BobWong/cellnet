@@ -2,6 +2,7 @@ package gorillaws
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"github.com/gorilla/websocket"
@@ -61,7 +62,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 	})
 
 	if err != nil {
-		log.Error("#ws.listen failed(%s) %v", self.Name(), err.Error())
+		log.GetLog().Error("#ws.listen failed(%s) %v", self.Name(), err.Error())
 		return self
 	}
 
@@ -77,7 +78,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 
 		c, err := self.upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Debug(err.Error())
+			log.GetLog().Debug(err.Error())
 			return
 		}
 
@@ -93,7 +94,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 
 	go func() {
 
-		log.Info("#ws.listen(%s) %s", self.Name(), addrObj.String(self.Port()))
+		log.GetLog().Info("#ws.listen(%s) %s", self.Name(), addrObj.String(self.Port()))
 
 		if self.certfile != "" && self.keyfile != "" {
 			err = self.sv.ServeTLS(self.listener, self.certfile, self.keyfile)
@@ -102,7 +103,7 @@ func (self *wsAcceptor) Start() cellnet.Peer {
 		}
 
 		if err != nil {
-			log.Error("#ws.listen. failed(%s) %v", self.Name(), err.Error())
+			log.GetLog().Error("#ws.listen. failed(%s) %v", self.Name(), err.Error())
 		}
 
 	}()

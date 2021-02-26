@@ -6,6 +6,7 @@ import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
 	_ "github.com/bobwong89757/cellnet/codec/httpjson"
+	"github.com/bobwong89757/cellnet/log"
 	"io"
 	"io/ioutil"
 	"net/http"
@@ -55,7 +56,7 @@ func (self *MessageRespond) WriteRespond(ses *httpSession) error {
 		return err
 	}
 
-	log.Debug("#http.send(%s) '%s' %s | [%d] %s",
+	log.GetLog().Debug("#http.send(%s) '%s' %s | [%d] %s",
 		peerInfo.Name(),
 		ses.req.Method,
 		ses.req.URL.Path,

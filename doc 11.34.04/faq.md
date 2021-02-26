@@ -48,7 +48,7 @@
 
 * 如何关闭调试消息日志?
 
-   golog.SetLevelByString(".", "info") // 将所有日志的级别提高到info级别，debug低于info级别所以不再显示
+   golog.GetLog().SetLevelByString(".", "info") // 将所有日志的级别提高到info级别，debug低于info级别所以不再显示
 
    第一个参数支持正则表达式，"."表示所有日志。可以指定日志名关闭
 

@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"net"
@@ -100,7 +101,7 @@ func (self *tcpSession) protectedReadMessage() (msg interface{}, err error) {
 	defer func() {
 
 		if err := recover(); err != nil {
-			log.Error("IO panic: %s", err)
+			log.GetLog().Error("IO panic: %s", err)
 			self.Conn().Close()
 		}
 
@@ -133,7 +134,7 @@ func (self *tcpSession) recvLoop() {
 
 		if err != nil {
 			if !util.IsEOFOrNetReadError(err) {
-				log.Error("session closed, sesid: %d, err: %s", self.ID(), err)
+				log.GetLog().Error("session closed, sesid: %d, err: %s", self.ID(), err)
 			}
 
 			self.sendQueue.Add(nil)

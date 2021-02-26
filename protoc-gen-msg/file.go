@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	log2 "github.com/bobwong89757/cellnet/log"
 	"go/parser"
 	"go/printer"
 	"go/token"
@@ -73,7 +74,7 @@ func printFile(pool *pbmeta.DescriptorPool) (string, bool) {
 
 	tpl, err := template.New("msgid").Parse(codeTemplate)
 	if err != nil {
-		log.Error(err.Error())
+		log2.GetLog().Error(err.Error())
 		return "", false
 	}
 
@@ -113,13 +114,13 @@ func printFile(pool *pbmeta.DescriptorPool) (string, bool) {
 
 	err = tpl.Execute(&bf, &model)
 	if err != nil {
-		log.Error(err.Error())
+		log2.GetLog().Error(err.Error())
 		return "", false
 	}
 
 	err = formatCode(&bf)
 	if err != nil {
-		log.Error(err.Error())
+		log2.GetLog().Error(err.Error())
 		return "", false
 	}
 

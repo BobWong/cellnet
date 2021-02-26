@@ -3,6 +3,7 @@ package http
 import (
 	"errors"
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"html/template"
@@ -87,20 +88,20 @@ func (self *httpAcceptor) Start() cellnet.Peer {
 
 	if err != nil {
 
-		log.Error("#http.listen failed(%s) %v", self.Name(), err.Error())
+		log.GetLog().Error("#http.listen failed(%s) %v", self.Name(), err.Error())
 
 		return self
 	}
 
 	self.listener = ln.(net.Listener)
 
-	log.Info("#http.listen(%s) http://%s", self.Name(), self.WANAddress())
+	log.GetLog().Info("#http.listen(%s) http://%s", self.Name(), self.WANAddress())
 
 	go func() {
 
 		err = self.sv.Serve(tcpKeepAliveListener{self.listener.(*net.TCPListener)})
 		if err != nil && err != http.ErrServerClosed {
-			log.Error("#http.listen failed(%s) %v", self.Name(), err.Error())
+			log.GetLog().Error("#http.listen failed(%s) %v", self.Name(), err.Error())
 		}
 
 	}()
@@ -134,7 +135,7 @@ func (self *httpAcceptor) ServeHTTP(res http.ResponseWriter, req *http.Request) 
 	if err != nil {
 
 		// 或者是普通消息没有Handled
-		log.Warn("#http.recv(%s) '%s' %s | [%d] Not found",
+		log.GetLog().Warn("#http.recv(%s) '%s' %s | [%d] Not found",
 			self.Name(),
 			req.Method,
 			req.URL.Path,
@@ -147,7 +148,7 @@ func (self *httpAcceptor) ServeHTTP(res http.ResponseWriter, req *http.Request) 
 	}
 
 	if fileHandled {
-		log.Debug("#http.recv(%s) '%s' %s | [%d] File",
+		log.GetLog().Debug("#http.recv(%s) '%s' %s | [%d] File",
 			self.Name(),
 			req.Method,
 			req.URL.Path,
@@ -155,14 +156,14 @@ func (self *httpAcceptor) ServeHTTP(res http.ResponseWriter, req *http.Request) 
 		return
 	}
 
-	log.Warn("#http.recv(%s) '%s' %s | Unhandled",
+	log.GetLog().Warn("#http.recv(%s) '%s' %s | Unhandled",
 		self.Name(),
 		req.Method,
 		req.URL.Path)
 
 	return
 OnError:
-	log.Error("#http.recv(%s) '%s' %s | [%d] %s",
+	log.GetLog().Error("#http.recv(%s) '%s' %s | [%d] %s",
 		self.Name(),
 		req.Method,
 		req.URL.Path,
@@ -176,7 +177,7 @@ OnError:
 func (self *httpAcceptor) Stop() {
 
 	if err := self.sv.Shutdown(nil); err != nil {
-		log.Error("#http.stop failed(%s) %v", self.Name(), err.Error())
+		log.GetLog().Error("#http.stop failed(%s) %v", self.Name(), err.Error())
 	}
 }
 

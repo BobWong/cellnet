@@ -118,7 +118,7 @@ func main() {
 
 	f, err := os.Create(*profile)
 	if err != nil {
-		log.Println(*profile)
+		log.GetLog().Println(*profile)
 	}
 
 

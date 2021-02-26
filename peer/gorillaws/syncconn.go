@@ -2,6 +2,7 @@ package gorillaws
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/gorilla/websocket"
 	"net"
@@ -45,7 +46,7 @@ func (self *wsSyncConnector) Start() cellnet.Peer {
 	// 发生错误时退出
 	if err != nil {
 
-		log.Debug("#ws.connect failed(%s)@%d address: %s", self.Name(), self.defaultSes.ID(), self.Address())
+		log.GetLog().Debug("#ws.connect failed(%s)@%d address: %s", self.Name(), self.defaultSes.ID(), self.Address())
 
 		self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self.defaultSes, Msg: &cellnet.SessionConnectError{}})
 		return self

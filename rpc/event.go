@@ -3,6 +3,7 @@ package rpc
 import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
+	"github.com/bobwong89757/cellnet/log"
 )
 
 type RecvMsgEvent struct {
@@ -30,7 +31,7 @@ func (self *RecvMsgEvent) Reply(msg interface{}) {
 	data, meta, err := codec.EncodeMessage(msg, nil)
 
 	if err != nil {
-		log.Error("rpc reply message encode error: %s", err)
+		log.GetLog().Error("rpc reply message encode error: %s", err)
 		return
 	}
 

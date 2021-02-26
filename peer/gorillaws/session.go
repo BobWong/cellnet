@@ -2,6 +2,7 @@ package gorillaws
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"github.com/gorilla/websocket"
@@ -60,10 +61,10 @@ func (self *wsSession) recvLoop() {
 
 		if err != nil {
 
-			log.Debug(err.Error())
+			log.GetLog().Debug(err.Error())
 
 			if !util.IsEOFOrNetReadError(err) {
-				log.Error("session closed:", err.Error())
+				log.GetLog().Error("session closed:", err.Error())
 			}
 
 			self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self, Msg: &cellnet.SessionClosed{}})

@@ -57,7 +57,7 @@ func (self *CoreTCPSocketOption) ApplySocketReadTimeout(conn net.Conn, callback 
 
 	if self.readTimeout > 0 {
 
-		// issue: http://blog.sina.com.cn/s/blog_9be3b8f10101lhiq.html
+		// issue: http://blog.GetLog().sina.com.cn/s/blog_9be3b8f10101lhiq.html
 		conn.SetReadDeadline(time.Now().Add(self.readTimeout))
 		callback()
 		conn.SetReadDeadline(time.Time{})

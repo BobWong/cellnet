@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"github.com/bobwong89757/cellnet/log"
 	"testing"
 	"time"
 
@@ -17,7 +18,7 @@ func TestAfterTimer(t *testing.T) {
 	queue.StartLoop()
 
 	timer.After(queue, 100*time.Millisecond, func() {
-		log.Debugln("after 100 ms")
+		log.GetLog().Debug("after 100 ms")
 
 		signal.Done(1)
 	}, nil)
@@ -28,7 +29,7 @@ func TestAfterTimer(t *testing.T) {
 			t.FailNow()
 		}
 
-		log.Debug("after 200 ms")
+		log.GetLog().Debug("after 200 ms")
 
 		signal.Done(2)
 	}, "context")
@@ -53,7 +54,7 @@ func TestLoopTimer(t *testing.T) {
 	// 启动计时循环
 	timer.NewLoop(queue, time.Millisecond*10, func(ctx *timer.Loop) {
 
-		log.Debug("tick 10 ms", count)
+		log.GetLog().Debug("tick 10 ms", count)
 
 		count++
 

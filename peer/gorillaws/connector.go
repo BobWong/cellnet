@@ -3,6 +3,7 @@ package gorillaws
 import (
 	"fmt"
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/bobwong89757/cellnet/util"
 	"github.com/gorilla/websocket"
@@ -101,7 +102,7 @@ func (self *wsConnector) connect(address string) {
 
 		addrObj, err := util.ParseAddress(address)
 		if err != nil {
-			log.Error("invalid address: %s", address)
+			log.GetLog().Error("invalid address: %s", address)
 			break
 		}
 
@@ -119,10 +120,10 @@ func (self *wsConnector) connect(address string) {
 		if err != nil {
 			if self.tryConnTimes <= reportConnectFailedLimitTimes {
 
-				log.Error("#ws.connect failed(%s) %v", self.Name(), err.Error())
+				log.GetLog().Error("#ws.connect failed(%s) %v", self.Name(), err.Error())
 
 				if self.tryConnTimes == reportConnectFailedLimitTimes {
-					log.Error("(%s) continue reconnecting, but mute log", self.Name())
+					log.GetLog().Error("(%s) continue reconnecting, but mute log", self.Name())
 				}
 			}
 

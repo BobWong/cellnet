@@ -1,6 +1,9 @@
 package http
 
-import "github.com/bobwong89757/cellnet"
+import (
+	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
+)
 
 type StatusRespond struct {
 	StatusCode int
@@ -10,7 +13,7 @@ func (self *StatusRespond) WriteRespond(ses *httpSession) error {
 
 	peerInfo := ses.Peer().(cellnet.PeerProperty)
 
-	log.Debug("#http.recv(%s) '%s' %s | [%d] Status",
+	log.GetLog().Debug("#http.recv(%s) '%s' %s | [%d] Status",
 		peerInfo.Name(),
 		ses.req.Method,
 		ses.req.URL.Path,

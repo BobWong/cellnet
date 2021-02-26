@@ -3,6 +3,7 @@ package mysql
 import (
 	"database/sql"
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"github.com/go-sql-driver/mysql"
 	"sync"
@@ -74,21 +75,21 @@ func (self *mysqlConnector) tryConnect() {
 	config, err := mysql.ParseDSN(self.Address())
 
 	if err != nil {
-		log.Error("Invalid mysql DSN: %s, %s\n", self.Address(), err.Error())
+		log.GetLog().Error("Invalid mysql DSN: %s, %s\n", self.Address(), err.Error())
 		return
 	}
 
-	log.Info("Connecting to mysql (%s) %s/%s...", self.Name(), config.Addr, config.DBName)
+	log.GetLog().Info("Connecting to mysql (%s) %s/%s...", self.Name(), config.Addr, config.DBName)
 
 	db, err := sql.Open("mysql", self.Address())
 	if err != nil {
-		log.Error("Open mysql database error: %s\n", err.Error())
+		log.GetLog().Error("Open mysql database error: %s\n", err.Error())
 		return
 	}
 
 	err = db.Ping()
 	if err != nil {
-		log.Error(err.Error())
+		log.GetLog().Error(err.Error())
 		return
 	}
 
@@ -100,7 +101,7 @@ func (self *mysqlConnector) tryConnect() {
 	self.dbGuard.Unlock()
 
 	if config != nil {
-		log.Info("Connected to mysql %s/%s", config.Addr, config.DBName)
+		log.GetLog().Info("Connected to mysql %s/%s", config.Addr, config.DBName)
 	}
 }
 

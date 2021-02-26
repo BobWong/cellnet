@@ -2,6 +2,7 @@ package tcp
 
 import (
 	"github.com/bobwong89757/cellnet"
+	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer"
 	"net"
 	"time"
@@ -36,7 +37,7 @@ func (self *tcpSyncConnector) Start() cellnet.Peer {
 	// 发生错误时退出
 	if err != nil {
 
-		log.Debug("#tcp.connect failed(%s)@%d address: %s", self.Name(), self.defaultSes.ID(), self.Address())
+		log.GetLog().Debug("#tcp.connect failed(%s)@%d address: %s", self.Name(), self.defaultSes.ID(), self.Address())
 
 		self.ProcEvent(&cellnet.RecvMsgEvent{Ses: self.defaultSes, Msg: &cellnet.SessionConnectError{}})
 		return self
