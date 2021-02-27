@@ -18,7 +18,7 @@ func (self MsgHooker) OnInboundEvent(inputEvent cellnet.Event) (outputEvent cell
 
 func (self MsgHooker) OnOutboundEvent(inputEvent cellnet.Event) (outputEvent cellnet.Event) {
 
-	msglog.GetLog().WriteSendLogger(log, "ws", inputEvent.Session(), inputEvent.Message())
+	msglog.WriteSendLogger("ws", inputEvent.Session(), inputEvent.Message())
 
 	return inputEvent
 }
