@@ -49,6 +49,8 @@ func getPackageByPeerName(name string) string {
 		return "github.com/bobwong89757/cellnet/peer/redix"
 	case "mysql.Connector":
 		return "github.com/bobwong89757/cellnet/peer/mysql"
+	case "kcp.Connector", "kcp.Acceptor", "kcp.SyncConnector":
+		return "github.com/bobwong89757/cellnet/peer/kcp"
 	default:
 		return "package/to/your/peer"
 	}

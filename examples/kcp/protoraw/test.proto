@@ -1,0 +1,8 @@
+// 添加Service属性的消息会在生成接收代码封装,同时加到路由表中
+
+// 服务器信息
+[MsgID:1001 Codec:"gogopb"]
+struct EchoAck{
+    Msg    string
+    Ext    string
+}
