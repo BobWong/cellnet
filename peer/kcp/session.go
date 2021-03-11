@@ -22,6 +22,7 @@ type DataWriter interface {
 type kcpSession struct {
 	*peer.CoreProcBundle
 	peer.CoreContextSet
+	peer.CoreSessionIdentify
 
 	pInterface cellnet.Peer
 

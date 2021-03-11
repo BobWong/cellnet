@@ -20,6 +20,7 @@ type DataWriter interface {
 type udpSession struct {
 	*peer.CoreProcBundle
 	peer.CoreContextSet
+	peer.CoreSessionIdentify
 
 	pInterface cellnet.Peer
 
