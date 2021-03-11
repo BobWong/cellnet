@@ -56,7 +56,7 @@ func (self *kcpAcceptor) Start() cellnet.Peer {
 
 		finalAddr = a
 
-		self.listener, err = kcp.ListenWithOptions(addr.String(), nil, 10, 3)
+		self.listener, err = kcp.ListenWithOptions(addr.String(), nil, 0, 0)
 		if err != nil {
 			log.GetLog().Error("#kcp.listen failed(%s) %v", self.Name(), err.Error())
 			return nil, err

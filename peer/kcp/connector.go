@@ -46,7 +46,7 @@ func (self *udpConnector) IsReady() bool {
 }
 
 func (self *udpConnector) connect() {
-	sess, err := kcp.DialWithOptions(self.remoteAddr.String(), nil, 10, 3)
+	sess, err := kcp.DialWithOptions(self.remoteAddr.String(), nil, 0, 0)
 	if err != nil {
 		log.GetLog().Error("#udp.connect failed(%s) %v", self.Name(), err.Error())
 		return
