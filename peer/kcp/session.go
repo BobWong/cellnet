@@ -62,10 +62,6 @@ func (self *kcpSession) IsAlive() bool {
 	return time.Now().Before(self.timeOutTick)
 }
 
-func (self *kcpSession) ID() int64 {
-	return 0
-}
-
 func (self *kcpSession) LocalAddress() net.Addr {
 	return self.GetKcpSession().LocalAddr()
 }
