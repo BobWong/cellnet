@@ -4,18 +4,32 @@ import (
 	"encoding/binary"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
-	"github.com/bobwong89757/cellnet/log"
 	"github.com/bobwong89757/cellnet/peer/kcp"
 )
 
 func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) error {
 
-	// 将用户数据转换为字节数组和消息ID
-	msgData, meta, err := codec.EncodeMessage(msg, ctx)
+	var (
+		msgData []byte
+		msgID   int
+		meta    *cellnet.MessageMeta
+	)
 
-	if err != nil {
-		log.GetLog().Error("send message encode error: %s", err)
-		return err
+	switch m := msg.(type) {
+	case *cellnet.RawPacket: // 发裸包
+		msgData = m.MsgData
+		msgID = m.MsgID
+	default: // 发普通编码包
+		var err error
+
+		// 将用户数据转换为字节数组和消息ID
+		msgData, meta, err = codec.EncodeMessage(msg, ctx)
+
+		if err != nil {
+			return err
+		}
+
+		msgID = meta.ID
 	}
 
 	pktData := make([]byte, HeaderSize+len(msgData))
@@ -24,7 +38,7 @@ func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) 
 	binary.LittleEndian.PutUint16(pktData, uint16(HeaderSize+len(msgData)))
 
 	// Type
-	binary.LittleEndian.PutUint16(pktData[2:], uint16(meta.ID))
+	binary.LittleEndian.PutUint16(pktData[2:], uint16(msgID))
 
 	// Value
 	copy(pktData[HeaderSize:], msgData)
