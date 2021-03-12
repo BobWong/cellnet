@@ -5,10 +5,10 @@ import (
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/codec"
 	"github.com/bobwong89757/cellnet/log"
-	"github.com/bobwong89757/cellnet/peer/udp"
+	"github.com/bobwong89757/cellnet/peer/kcp"
 )
 
-func SendPacket(writer udp.DataWriter, ctx cellnet.ContextSet, msg interface{}) error {
+func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) error {
 
 	// 将用户数据转换为字节数组和消息ID
 	msgData, meta, err := codec.EncodeMessage(msg, ctx)
