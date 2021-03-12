@@ -7,13 +7,14 @@ import (
 	"github.com/bobwong89757/cellnet/util"
 	"github.com/bobwong89757/kcp-go/v6"
 	"net"
+	"strings"
 	"time"
 )
 
 const MaxUDPRecvBuffer = 4096
 
 type kcpAcceptor struct {
-	peer.CoreSessionManager
+	peer.SessionManager
 	peer.CorePeerProperty
 	peer.CoreContextSet
 	peer.CoreRunningTag
@@ -45,6 +46,11 @@ func (self *kcpAcceptor) Port() int {
 }
 
 func (self *kcpAcceptor) Start() cellnet.Peer {
+
+	self.WaitStopFinished()
+	if self.IsRunning() {
+		return self
+	}
 
 	var finalAddr *util.Address
 	ln, err := util.DetectPort(self.Address(), func(a *util.Address, port int) (interface{}, error) {
@@ -80,46 +86,90 @@ func (self *kcpAcceptor) Start() cellnet.Peer {
 	return self
 }
 
-func (self *kcpAcceptor) protectedRecvPacket(ses *kcpSession, data []byte) {
-	defer func() {
+//func (self *kcpAcceptor) protectedRecvPacket(ses *kcpSession, data []byte) {
+//	defer func() {
+//
+//		if err := recover(); err != nil {
+//			log.GetLog().Error("IO panic: %s", err)
+//			self.conn.Close()
+//		}
+//
+//	}()
+//
+//	ses.Recv(data)
+//}
 
-		if err := recover(); err != nil {
-			log.GetLog().Error("IO panic: %s", err)
-			self.conn.Close()
-		}
+func (self *kcpAcceptor) ListenAddress() string {
 
-	}()
+	pos := strings.Index(self.Address(), ":")
+	if pos == -1 {
+		return self.Address()
+	}
 
-	ses.Recv(data)
+	host := self.Address()[:pos]
+
+	return util.JoinAddress(host, self.Port())
 }
 
 func (self *kcpAcceptor) accept() {
 
 	self.SetRunning(true)
 
-	recvBuff := make([]byte, MaxUDPRecvBuffer)
+	//recvBuff := make([]byte, MaxUDPRecvBuffer)
 
 	for self.IsRunning() {
 		udpSession, err := self.listener.AcceptKCP()
 
-		if err != nil {
+		if self.IsStopping() {
 			break
 		}
 
-		self.checkTimeoutSession()
+		if err == nil {
+			// 处理连接进入独立线程, 防止accept无法响应
+			go self.onNewSession(udpSession)
 
-		ses := self.getSession(udpSession.RemoteAddr().(*net.UDPAddr))
-		ses.kcpSession = udpSession
-		self.ProcEvent(&cellnet.RecvMsgEvent{
-			Ses: ses,
-			Msg: &cellnet.SessionAccepted{},
-		})
+		} else {
 
-		ses.Recv(recvBuff)
+			if nerr, ok := err.(net.Error); ok && nerr.Temporary() {
+				time.Sleep(time.Millisecond)
+				continue
+			}
+
+			// 调试状态时, 才打出accept的具体错误
+			log.GetLog().Error("#tcp.accept failed(%s) %v", self.Name(), err.Error())
+			break
+		}
+
+		//if err != nil {
+		//	break
+		//}
+		//
+		//self.checkTimeoutSession()
+		//
+		//ses := self.getSession(udpSession.RemoteAddr().(*net.UDPAddr))
+		//ses.kcpSession = udpSession
+		//self.ProcEvent(&cellnet.RecvMsgEvent{
+		//	Ses: ses,
+		//	Msg: &cellnet.SessionAccepted{},
+		//})
+		//
+		//ses.Recv(recvBuff)
 	}
 
 	self.SetRunning(false)
+	self.EndStopping()
+}
 
+func (self *kcpAcceptor) onNewSession(kcpSession *kcp.UDPSession) {
+
+	ses := newSession(kcpSession, self, nil)
+
+	ses.Start()
+
+	self.ProcEvent(&cellnet.RecvMsgEvent{
+		Ses: ses,
+		Msg: &cellnet.SessionAccepted{},
+	})
 }
 
 // 检查超时session
@@ -173,12 +223,23 @@ func (self *kcpAcceptor) SetSessionCleanTimeout(dur time.Duration) {
 
 func (self *kcpAcceptor) Stop() {
 
-	if self.conn != nil {
-		self.conn.Close()
+	if !self.IsRunning() {
+		return
 	}
 
-	// TODO 等待accept线程结束
-	self.SetRunning(false)
+	if self.IsStopping() {
+		return
+	}
+
+	self.StartStopping()
+
+	self.listener.Close()
+
+	self.CloseAllSession()
+
+	//// TODO 等待accept线程结束
+	//self.SetRunning(false)
+	self.WaitStopFinished()
 }
 
 func (self *kcpAcceptor) TypeName() string {
@@ -189,6 +250,7 @@ func init() {
 
 	peer.RegisterPeerCreator(func() cellnet.Peer {
 		p := &kcpAcceptor{
+			SessionManager:   new(peer.CoreSessionManager),
 			sesTimeout:       time.Minute,
 			sesCleanTimeout:  time.Minute,
 			sesCleanLastTime: time.Now(),

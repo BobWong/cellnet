@@ -73,22 +73,153 @@ func (m *EchoAck) GetExt() string {
 	return ""
 }
 
+// [2001]登录服务器
+type LoginServer struct {
+	UserId    string `protobuf:"bytes,1,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	GameToken string `protobuf:"bytes,2,opt,name=GameToken,proto3" json:"GameToken,omitempty"`
+	GameSvcID string `protobuf:"bytes,3,opt,name=GameSvcID,proto3" json:"GameSvcID,omitempty"`
+}
+
+func (m *LoginServer) Reset()         { *m = LoginServer{} }
+func (m *LoginServer) String() string { return proto.CompactTextString(m) }
+func (*LoginServer) ProtoMessage()    {}
+func (*LoginServer) Descriptor() ([]byte, []int) {
+	return fileDescriptor_54458e0ca6367313, []int{1}
+}
+func (m *LoginServer) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LoginServer) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LoginServer.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *LoginServer) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginServer.Merge(m, src)
+}
+func (m *LoginServer) XXX_Size() int {
+	return m.Size()
+}
+func (m *LoginServer) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginServer.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoginServer proto.InternalMessageInfo
+
+func (m *LoginServer) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *LoginServer) GetGameToken() string {
+	if m != nil {
+		return m.GameToken
+	}
+	return ""
+}
+
+func (m *LoginServer) GetGameSvcID() string {
+	if m != nil {
+		return m.GameSvcID
+	}
+	return ""
+}
+
+// [2002]登录服务器回复
+type LoginServerACK struct {
+	Code         int32   `protobuf:"varint,1,opt,name=Code,proto3" json:"Code,omitempty"`
+	UserId       string  `protobuf:"bytes,2,opt,name=UserId,proto3" json:"UserId,omitempty"`
+	PlayerIdList []int64 `protobuf:"varint,3,rep,packed,name=PlayerIdList,proto3" json:"PlayerIdList,omitempty"`
+}
+
+func (m *LoginServerACK) Reset()         { *m = LoginServerACK{} }
+func (m *LoginServerACK) String() string { return proto.CompactTextString(m) }
+func (*LoginServerACK) ProtoMessage()    {}
+func (*LoginServerACK) Descriptor() ([]byte, []int) {
+	return fileDescriptor_54458e0ca6367313, []int{2}
+}
+func (m *LoginServerACK) XXX_Unmarshal(b []byte) error {
+	return m.Unmarshal(b)
+}
+func (m *LoginServerACK) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	if deterministic {
+		return xxx_messageInfo_LoginServerACK.Marshal(b, m, deterministic)
+	} else {
+		b = b[:cap(b)]
+		n, err := m.MarshalTo(b)
+		if err != nil {
+			return nil, err
+		}
+		return b[:n], nil
+	}
+}
+func (m *LoginServerACK) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LoginServerACK.Merge(m, src)
+}
+func (m *LoginServerACK) XXX_Size() int {
+	return m.Size()
+}
+func (m *LoginServerACK) XXX_DiscardUnknown() {
+	xxx_messageInfo_LoginServerACK.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LoginServerACK proto.InternalMessageInfo
+
+func (m *LoginServerACK) GetCode() int32 {
+	if m != nil {
+		return m.Code
+	}
+	return 0
+}
+
+func (m *LoginServerACK) GetUserId() string {
+	if m != nil {
+		return m.UserId
+	}
+	return ""
+}
+
+func (m *LoginServerACK) GetPlayerIdList() []int64 {
+	if m != nil {
+		return m.PlayerIdList
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*EchoAck)(nil), "proto.EchoAck")
+	proto.RegisterType((*LoginServer)(nil), "proto.LoginServer")
+	proto.RegisterType((*LoginServerACK)(nil), "proto.LoginServerACK")
 }
 
 func init() { proto.RegisterFile("clientmsg_gen.proto", fileDescriptor_54458e0ca6367313) }
 
 var fileDescriptor_54458e0ca6367313 = []byte{
-	// 120 bytes of a gzipped FileDescriptorProto
+	// 229 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4e, 0xce, 0xc9, 0x4c,
 	0xcd, 0x2b, 0xc9, 0x2d, 0x4e, 0x8f, 0x4f, 0x4f, 0xcd, 0xd3, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17,
 	0x62, 0x05, 0x53, 0x4a, 0xba, 0x5c, 0xec, 0xae, 0xc9, 0x19, 0xf9, 0x8e, 0xc9, 0xd9, 0x42, 0x02,
 	0x5c, 0xcc, 0xbe, 0xc5, 0xe9, 0x12, 0x8c, 0x0a, 0x8c, 0x1a, 0x9c, 0x41, 0x20, 0x26, 0x48, 0xc4,
-	0xb5, 0xa2, 0x44, 0x82, 0x09, 0x22, 0xe2, 0x5a, 0x51, 0xe2, 0x24, 0x71, 0xe2, 0x91, 0x1c, 0xe3,
-	0x85, 0x47, 0x72, 0x8c, 0x0f, 0x1e, 0xc9, 0x31, 0x4e, 0x78, 0x2c, 0xc7, 0x70, 0xe1, 0xb1, 0x1c,
-	0xc3, 0x8d, 0xc7, 0x72, 0x0c, 0x49, 0x6c, 0x60, 0xf3, 0x8c, 0x01, 0x01, 0x00, 0x00, 0xff, 0xff,
-	0xb3, 0x6e, 0x2d, 0x33, 0x6d, 0x00, 0x00, 0x00,
+	0xb5, 0xa2, 0x44, 0x82, 0x09, 0x22, 0xe2, 0x5a, 0x51, 0xa2, 0x94, 0xc8, 0xc5, 0xed, 0x93, 0x9f,
+	0x9e, 0x99, 0x17, 0x9c, 0x5a, 0x54, 0x96, 0x5a, 0x24, 0x24, 0xc6, 0xc5, 0x16, 0x5a, 0x9c, 0x5a,
+	0xe4, 0x99, 0x02, 0xd5, 0x05, 0xe5, 0x09, 0xc9, 0x70, 0x71, 0xba, 0x27, 0xe6, 0xa6, 0x86, 0xe4,
+	0x67, 0xa7, 0xe6, 0x41, 0xb5, 0x23, 0x04, 0x60, 0xb2, 0xc1, 0x65, 0xc9, 0x9e, 0x2e, 0x12, 0xcc,
+	0x08, 0x59, 0xb0, 0x80, 0x52, 0x02, 0x17, 0x1f, 0x92, 0x15, 0x8e, 0xce, 0xde, 0x42, 0x42, 0x5c,
+	0x2c, 0xce, 0xf9, 0x29, 0xa9, 0x60, 0x3b, 0x58, 0x83, 0xc0, 0x6c, 0x24, 0x9b, 0x99, 0x50, 0x6c,
+	0x56, 0xe2, 0xe2, 0x09, 0xc8, 0x49, 0xac, 0x04, 0xb1, 0x7d, 0x32, 0x8b, 0x4b, 0x24, 0x98, 0x15,
+	0x98, 0x35, 0x98, 0x83, 0x50, 0xc4, 0x9c, 0x24, 0x4e, 0x3c, 0x92, 0x63, 0xbc, 0xf0, 0x48, 0x8e,
+	0xf1, 0xc1, 0x23, 0x39, 0xc6, 0x09, 0x8f, 0xe5, 0x18, 0x2e, 0x3c, 0x96, 0x63, 0xb8, 0xf1, 0x58,
+	0x8e, 0x21, 0x89, 0x0d, 0x1c, 0x28, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x58, 0xe3, 0x09,
+	0x40, 0x32, 0x01, 0x00, 0x00,
 }
 
 func (m *EchoAck) Marshal() (dAtA []byte, err error) {
@@ -121,6 +252,89 @@ func (m *EchoAck) MarshalTo(dAtA []byte) (int, error) {
 	return i, nil
 }
 
+func (m *LoginServer) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LoginServer) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if len(m.UserId) > 0 {
+		dAtA[i] = 0xa
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(len(m.UserId)))
+		i += copy(dAtA[i:], m.UserId)
+	}
+	if len(m.GameToken) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(len(m.GameToken)))
+		i += copy(dAtA[i:], m.GameToken)
+	}
+	if len(m.GameSvcID) > 0 {
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(len(m.GameSvcID)))
+		i += copy(dAtA[i:], m.GameSvcID)
+	}
+	return i, nil
+}
+
+func (m *LoginServerACK) Marshal() (dAtA []byte, err error) {
+	size := m.Size()
+	dAtA = make([]byte, size)
+	n, err := m.MarshalTo(dAtA)
+	if err != nil {
+		return nil, err
+	}
+	return dAtA[:n], nil
+}
+
+func (m *LoginServerACK) MarshalTo(dAtA []byte) (int, error) {
+	var i int
+	_ = i
+	var l int
+	_ = l
+	if m.Code != 0 {
+		dAtA[i] = 0x8
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(m.Code))
+	}
+	if len(m.UserId) > 0 {
+		dAtA[i] = 0x12
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(len(m.UserId)))
+		i += copy(dAtA[i:], m.UserId)
+	}
+	if len(m.PlayerIdList) > 0 {
+		dAtA2 := make([]byte, len(m.PlayerIdList)*10)
+		var j1 int
+		for _, num1 := range m.PlayerIdList {
+			num := uint64(num1)
+			for num >= 1<<7 {
+				dAtA2[j1] = uint8(uint64(num)&0x7f | 0x80)
+				num >>= 7
+				j1++
+			}
+			dAtA2[j1] = uint8(num)
+			j1++
+		}
+		dAtA[i] = 0x1a
+		i++
+		i = encodeVarintClientmsgGen(dAtA, i, uint64(j1))
+		i += copy(dAtA[i:], dAtA2[:j1])
+	}
+	return i, nil
+}
+
 func encodeVarintClientmsgGen(dAtA []byte, offset int, v uint64) int {
 	for v >= 1<<7 {
 		dAtA[offset] = uint8(v&0x7f | 0x80)
@@ -143,6 +357,50 @@ func (m *EchoAck) Size() (n int) {
 	l = len(m.Ext)
 	if l > 0 {
 		n += 1 + l + sovClientmsgGen(uint64(l))
+	}
+	return n
+}
+
+func (m *LoginServer) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	l = len(m.UserId)
+	if l > 0 {
+		n += 1 + l + sovClientmsgGen(uint64(l))
+	}
+	l = len(m.GameToken)
+	if l > 0 {
+		n += 1 + l + sovClientmsgGen(uint64(l))
+	}
+	l = len(m.GameSvcID)
+	if l > 0 {
+		n += 1 + l + sovClientmsgGen(uint64(l))
+	}
+	return n
+}
+
+func (m *LoginServerACK) Size() (n int) {
+	if m == nil {
+		return 0
+	}
+	var l int
+	_ = l
+	if m.Code != 0 {
+		n += 1 + sovClientmsgGen(uint64(m.Code))
+	}
+	l = len(m.UserId)
+	if l > 0 {
+		n += 1 + l + sovClientmsgGen(uint64(l))
+	}
+	if len(m.PlayerIdList) > 0 {
+		l = 0
+		for _, e := range m.PlayerIdList {
+			l += sovClientmsgGen(uint64(e))
+		}
+		n += 1 + sovClientmsgGen(uint64(l)) + l
 	}
 	return n
 }
@@ -253,6 +511,335 @@ func (m *EchoAck) Unmarshal(dAtA []byte) error {
 			}
 			m.Ext = string(dAtA[iNdEx:postIndex])
 			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipClientmsgGen(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *LoginServer) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowClientmsgGen
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LoginServer: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LoginServer: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowClientmsgGen
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameToken", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowClientmsgGen
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GameToken = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field GameSvcID", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowClientmsgGen
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.GameSvcID = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		default:
+			iNdEx = preIndex
+			skippy, err := skipClientmsgGen(dAtA[iNdEx:])
+			if err != nil {
+				return err
+			}
+			if skippy < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if (iNdEx + skippy) < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if (iNdEx + skippy) > l {
+				return io.ErrUnexpectedEOF
+			}
+			iNdEx += skippy
+		}
+	}
+
+	if iNdEx > l {
+		return io.ErrUnexpectedEOF
+	}
+	return nil
+}
+func (m *LoginServerACK) Unmarshal(dAtA []byte) error {
+	l := len(dAtA)
+	iNdEx := 0
+	for iNdEx < l {
+		preIndex := iNdEx
+		var wire uint64
+		for shift := uint(0); ; shift += 7 {
+			if shift >= 64 {
+				return ErrIntOverflowClientmsgGen
+			}
+			if iNdEx >= l {
+				return io.ErrUnexpectedEOF
+			}
+			b := dAtA[iNdEx]
+			iNdEx++
+			wire |= uint64(b&0x7F) << shift
+			if b < 0x80 {
+				break
+			}
+		}
+		fieldNum := int32(wire >> 3)
+		wireType := int(wire & 0x7)
+		if wireType == 4 {
+			return fmt.Errorf("proto: LoginServerACK: wiretype end group for non-group")
+		}
+		if fieldNum <= 0 {
+			return fmt.Errorf("proto: LoginServerACK: illegal tag %d (wire type %d)", fieldNum, wire)
+		}
+		switch fieldNum {
+		case 1:
+			if wireType != 0 {
+				return fmt.Errorf("proto: wrong wireType = %d for field Code", wireType)
+			}
+			m.Code = 0
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowClientmsgGen
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				m.Code |= int32(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+		case 2:
+			if wireType != 2 {
+				return fmt.Errorf("proto: wrong wireType = %d for field UserId", wireType)
+			}
+			var stringLen uint64
+			for shift := uint(0); ; shift += 7 {
+				if shift >= 64 {
+					return ErrIntOverflowClientmsgGen
+				}
+				if iNdEx >= l {
+					return io.ErrUnexpectedEOF
+				}
+				b := dAtA[iNdEx]
+				iNdEx++
+				stringLen |= uint64(b&0x7F) << shift
+				if b < 0x80 {
+					break
+				}
+			}
+			intStringLen := int(stringLen)
+			if intStringLen < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			postIndex := iNdEx + intStringLen
+			if postIndex < 0 {
+				return ErrInvalidLengthClientmsgGen
+			}
+			if postIndex > l {
+				return io.ErrUnexpectedEOF
+			}
+			m.UserId = string(dAtA[iNdEx:postIndex])
+			iNdEx = postIndex
+		case 3:
+			if wireType == 0 {
+				var v int64
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowClientmsgGen
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					v |= int64(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				m.PlayerIdList = append(m.PlayerIdList, v)
+			} else if wireType == 2 {
+				var packedLen int
+				for shift := uint(0); ; shift += 7 {
+					if shift >= 64 {
+						return ErrIntOverflowClientmsgGen
+					}
+					if iNdEx >= l {
+						return io.ErrUnexpectedEOF
+					}
+					b := dAtA[iNdEx]
+					iNdEx++
+					packedLen |= int(b&0x7F) << shift
+					if b < 0x80 {
+						break
+					}
+				}
+				if packedLen < 0 {
+					return ErrInvalidLengthClientmsgGen
+				}
+				postIndex := iNdEx + packedLen
+				if postIndex < 0 {
+					return ErrInvalidLengthClientmsgGen
+				}
+				if postIndex > l {
+					return io.ErrUnexpectedEOF
+				}
+				var elementCount int
+				var count int
+				for _, integer := range dAtA[iNdEx:postIndex] {
+					if integer < 128 {
+						count++
+					}
+				}
+				elementCount = count
+				if elementCount != 0 && len(m.PlayerIdList) == 0 {
+					m.PlayerIdList = make([]int64, 0, elementCount)
+				}
+				for iNdEx < postIndex {
+					var v int64
+					for shift := uint(0); ; shift += 7 {
+						if shift >= 64 {
+							return ErrIntOverflowClientmsgGen
+						}
+						if iNdEx >= l {
+							return io.ErrUnexpectedEOF
+						}
+						b := dAtA[iNdEx]
+						iNdEx++
+						v |= int64(b&0x7F) << shift
+						if b < 0x80 {
+							break
+						}
+					}
+					m.PlayerIdList = append(m.PlayerIdList, v)
+				}
+			} else {
+				return fmt.Errorf("proto: wrong wireType = %d for field PlayerIdList", wireType)
+			}
 		default:
 			iNdEx = preIndex
 			skippy, err := skipClientmsgGen(dAtA[iNdEx:])

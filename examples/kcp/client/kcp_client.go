@@ -13,7 +13,7 @@ import (
 	"github.com/bobwong89757/golog/logs"
 )
 
-const peerAddress = "10.0.40.20:12346"
+const peerAddress = "10.0.40.20:12345"
 
 func main() {
 	customLogger := logs.NewLogger()
@@ -28,6 +28,14 @@ func main() {
 		case *cellnet.SessionConnected: // 接受一个连接
 			addr,has := util.GetRemoteAddrss(ev.Session())
 			log.GetLog().Debug("server connect %s,%v",addr,has)
+
+			//req := &proto.LoginServer{
+			//	UserId: "10026",
+			//	GameToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxMDAyNiwicmVtb3RlX2lwIjoiOjg4MjgiLCJleHAiOjE2MTU0NTU3MTYsImlzcyI6ImJvYiJ9.NVl7p-m94QZIRI6Kt359IexPR4PPi1BfeVMMsUU2lic",
+			//	GameSvcID: "game#0@dev",
+			//}
+			//ev.Session().Send(req)
+
 			ack := &proto.EchoAck{
 				Msg:   "goodjob",
 				Ext: "4",

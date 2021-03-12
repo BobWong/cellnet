@@ -14,7 +14,7 @@ import (
 	"github.com/bobwong89757/golog/logs"
 )
 
-const peerAddress = "10.0.40.20:12346"
+const peerAddress = "10.0.40.20:12345"
 
 func main() {
 	customLogger := logs.NewLogger()

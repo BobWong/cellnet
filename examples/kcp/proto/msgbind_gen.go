@@ -17,9 +17,26 @@ var (
 	_ reflect.Type
 )
 
+// game
+var (
+	Handle_Game_LoginServer = func(ev cellnet.Event) { panic("'LoginServer' not handled") }
+	Handle_Game_Default     func(ev cellnet.Event)
+)
+
 func GetMessageHandler(svcName string) cellnet.EventCallback {
 
 	switch svcName {
+	case "game":
+		return func(ev cellnet.Event) {
+			switch ev.Message().(type) {
+			case *LoginServer:
+				Handle_Game_LoginServer(ev)
+			default:
+				if Handle_Game_Default != nil {
+					Handle_Game_Default(ev)
+				}
+			}
+		}
 	}
 
 	return nil
@@ -30,6 +47,16 @@ func init() {
 	cellnet.RegisterMessageMeta(&cellnet.MessageMeta{
 		Codec: codec.MustGetCodec("gogopb"),
 		Type:  reflect.TypeOf((*EchoAck)(nil)).Elem(),
-		ID:    1001,
+		ID:    3013,
+	})
+	cellnet.RegisterMessageMeta(&cellnet.MessageMeta{
+		Codec: codec.MustGetCodec("gogopb"),
+		Type:  reflect.TypeOf((*LoginServer)(nil)).Elem(),
+		ID:    2001,
+	})
+	cellnet.RegisterMessageMeta(&cellnet.MessageMeta{
+		Codec: codec.MustGetCodec("gogopb"),
+		Type:  reflect.TypeOf((*LoginServerACK)(nil)).Elem(),
+		ID:    2002,
 	})
 }

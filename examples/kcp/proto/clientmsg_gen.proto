@@ -13,3 +13,17 @@ message EchoAck {
 	string Ext = 2; 
 }
 
+// [2001]登录服务器
+message LoginServer {	
+	string UserId = 1;// 用户id 
+	string GameToken = 2;// 密钥 
+	string GameSvcID = 3;// 选中的服务器ID 
+}
+
+// [2002]登录服务器回复
+message LoginServerACK {	
+	int32 Code = 1;// 错误码, 200为无错误 
+	string UserId = 2;// 用户id 
+	repeated int64 PlayerIdList = 3;// 玩家id列表 
+}
+

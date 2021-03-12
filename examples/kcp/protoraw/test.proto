@@ -1,8 +1,24 @@
 // 添加Service属性的消息会在生成接收代码封装,同时加到路由表中
 
 // 服务器信息
-[MsgID:1001 Codec:"gogopb"]
+[MsgID:3013 Codec:"gogopb"]
 struct EchoAck{
     Msg    string
     Ext    string
 }
+[MsgID:2001 Codec:"gogopb" Service: "game" RouteRule: "pass"]
+// [2001]登录服务器
+    struct LoginServer {
+UserId string // 用户id
+    GameToken string // 密钥
+    GameSvcID string // 选中的服务器ID
+    }
+
+
+[MsgID:2002 Codec:"gogopb"]
+// [2002]登录服务器回复
+    struct LoginServerACK {
+Code int32 // 错误码, 200为无错误
+    UserId string // 用户id
+    PlayerIdList []int64 // 玩家id列表
+    }
