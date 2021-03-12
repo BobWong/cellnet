@@ -45,7 +45,10 @@ func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) 
 
 	writer.WriteData(pktData)
 
-	codec.FreeCodecResource(meta.Codec, msgData, ctx)
+	// Codec中使用内存池时的释放位置
+	if meta != nil {
+		codec.FreeCodecResource(meta.Codec, msgData, ctx)
+	}
 
 	return nil
 }
