@@ -8,7 +8,7 @@ import (
 	"github.com/bobwong89757/cellnet/peer/udp"
 )
 
-func sendPacket(writer udp.DataWriter, ctx cellnet.ContextSet, msg interface{}) error {
+func SendPacket(writer udp.DataWriter, ctx cellnet.ContextSet, msg interface{}) error {
 
 	// 将用户数据转换为字节数组和消息ID
 	msgData, meta, err := codec.EncodeMessage(msg, ctx)

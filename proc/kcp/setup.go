@@ -30,7 +30,7 @@ func (KCPMessageTransmitter) OnSendMessage(ses cellnet.Session, msg interface{})
 	msglog.WriteSendLogger("kcp", ses, msg)
 
 	// ses不再被复用, 所以使用session自己的contextset做内存池, 避免串台
-	return sendPacket(writer, ses.(cellnet.ContextSet), msg)
+	return SendPacket(writer, ses.(cellnet.ContextSet), msg)
 }
 
 func init() {
