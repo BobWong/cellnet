@@ -5,7 +5,7 @@ import (
 	"encoding/binary"
 	"github.com/bobwong89757/cellnet"
 	"github.com/bobwong89757/cellnet/msglog"
-	"github.com/bobwong89757/cellnet/peer/udp"
+	"github.com/bobwong89757/cellnet/peer/kcp"
 	"github.com/bobwong89757/cellnet/proc"
 )
 
@@ -14,7 +14,7 @@ type KCPMessageTransmitter struct {
 
 func (KCPMessageTransmitter) OnRecvMessage(ses cellnet.Session) (msg interface{}, err error) {
 
-	data := ses.Raw().(udp.DataReader).ReadData()
+	data := ses.Raw().(kcp.DataReader).ReadData()
 
 	msg, err = RecvPacket(data)
 
@@ -25,7 +25,7 @@ func (KCPMessageTransmitter) OnRecvMessage(ses cellnet.Session) (msg interface{}
 
 func (KCPMessageTransmitter) OnSendMessage(ses cellnet.Session, msg interface{}) error {
 
-	writer := ses.(udp.DataWriter)
+	writer := ses.(kcp.DataWriter)
 
 	msglog.WriteSendLogger("kcp", ses, msg)
 
