@@ -38,7 +38,7 @@ func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) 
 	binary.LittleEndian.PutUint16(pktData, uint16(MsgIDSize+len(msgData)))
 
 	// Type
-	binary.LittleEndian.PutUint16(pktData[:], uint16(msgID))
+	binary.LittleEndian.PutUint16(pktData[BodySize:], uint16(msgID))
 
 	// Value
 	copy(pktData[BodySize + MsgIDSize:], msgData)
