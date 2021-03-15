@@ -7,10 +7,8 @@ import (
 
 const (
 	MTU       = 1472 // 最大传输单元
-	packetLen = 2    // 包体大小字段
-	MsgIDLen  = 2    // 消息ID字段
-
-	HeaderSize = MsgIDLen + MsgIDLen // 整个UDP包头部分
+	BodySize = 2    // 包体大小字段
+	MsgIDSize  = 2    // 消息ID字段
 )
 
 func RecvPacket(pktData []byte) (msg interface{}, err error) {
@@ -20,7 +18,7 @@ func RecvPacket(pktData []byte) (msg interface{}, err error) {
 	datasize := binary.LittleEndian.Uint16(pktData)
 
 	//小于包头，使用nc指令测试时，为1
-	if datasize < packetLen {
+	if datasize < BodySize {
 		return nil, nil
 	}
 
@@ -30,9 +28,9 @@ func RecvPacket(pktData []byte) (msg interface{}, err error) {
 	}
 
 	// 读取消息ID
-	msgid := binary.LittleEndian.Uint16(pktData[packetLen:])
+	msgid := binary.LittleEndian.Uint16(pktData[BodySize:])
 
-	msgData := pktData[HeaderSize:]
+	msgData := pktData[BodySize + MsgIDSize:]
 
 	// 将字节数组和消息ID用户解出消息
 	msg, _, err = codec.DecodeMessage(int(msgid), msgData)

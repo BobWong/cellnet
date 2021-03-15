@@ -32,16 +32,16 @@ func SendPacket(writer kcp.DataWriter, ctx cellnet.ContextSet, msg interface{}) 
 		msgID = meta.ID
 	}
 
-	pktData := make([]byte, HeaderSize+len(msgData))
+	pktData := make([]byte, BodySize + MsgIDSize +len(msgData))
 
 	// 写入消息长度做验证
-	binary.LittleEndian.PutUint16(pktData, uint16(HeaderSize+len(msgData)))
+	binary.LittleEndian.PutUint16(pktData, uint16(MsgIDSize+len(msgData)))
 
 	// Type
-	binary.LittleEndian.PutUint16(pktData[2:], uint16(msgID))
+	binary.LittleEndian.PutUint16(pktData[:], uint16(msgID))
 
 	// Value
-	copy(pktData[HeaderSize:], msgData)
+	copy(pktData[BodySize + MsgIDSize:], msgData)
 
 	writer.WriteData(pktData)
 
