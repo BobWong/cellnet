@@ -14,16 +14,18 @@ const (
 )
 
 func RecvPacket(pktData []byte) (msg interface{}, err error) {
-	//小于包头，使用nc指令测试时，为1
-	if len(pktData) < packetLen {
-		return nil, nil
-	}
+
 
 	// 用小端格式读取Size
 	datasize := binary.LittleEndian.Uint16(pktData)
 
+	//小于包头，使用nc指令测试时，为1
+	if datasize < packetLen {
+		return nil, nil
+	}
+
 	// 出错，等待下次数据
-	if int(datasize) != len(pktData) || datasize > MTU {
+	if datasize > MTU {
 		return nil, nil
 	}
 
