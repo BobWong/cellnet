@@ -136,7 +136,7 @@ func (self *kcpAcceptor) accept() {
 			}
 
 			// 调试状态时, 才打出accept的具体错误
-			log.GetLog().Error("#tcp.accept failed(%s) %v", self.Name(), err.Error())
+			log.GetLog().Error("#kcp.accept failed(%s) %v", self.Name(), err.Error())
 			break
 		}
 

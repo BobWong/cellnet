@@ -130,8 +130,10 @@ func (self *kcpSession) Close() {
 	}
 	conn := self.kcpSession.GetConn()
 	if conn != nil {
-		self.kcpSession.Close()
-		self.kcpSession.GetConn().SetReadDeadline(time.Now())
+		conn.Close()
+		conn.SetReadDeadline(time.Now())
+		//self.kcpSession.Close()
+		//self.kcpSession.GetConn().SetReadDeadline(time.Now())
 	}
 }
 
