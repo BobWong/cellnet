@@ -124,17 +124,7 @@ func (self *kcpSession) WriteData(data []byte) {
 //}
 
 func (self *kcpSession) Close() {
-	closing := atomic.SwapInt64(&self.closing, 1)
-	if closing != 0 {
-		return
-	}
-	conn := self.kcpSession.GetConn()
-	if conn != nil {
-		conn.Close()
-		conn.SetReadDeadline(time.Now())
-		//self.kcpSession.Close()
-		//self.kcpSession.GetConn().SetReadDeadline(time.Now())
-	}
+	atomic.SwapInt64(&self.closing, 1)
 }
 
 func (self *kcpSession) Send(msg interface{}) {
