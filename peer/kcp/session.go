@@ -42,7 +42,7 @@ type kcpSession struct {
 	//conn        *net.UDPConn
 	connGuard   sync.RWMutex
 	timeOutTick time.Time
-	kcpSession *kcp.UDPSession
+	kcpSession  *kcp.UDPSession
 	key         *connTrackKey
 }
 
@@ -93,7 +93,7 @@ func (self *kcpSession) ReadData() []byte {
 	n, err := self.kcpSession.Read(recvBuff)
 	//n, err := self.kcpSession.Read(self.pkt)
 	if err != nil {
-		log.GetLog().Error("kcp读取错误 %v",err)
+		log.GetLog().Error("kcp读取错误 %v", err)
 	}
 	self.pkt = recvBuff[:n]
 	return self.pkt
@@ -125,6 +125,12 @@ func (self *kcpSession) WriteData(data []byte) {
 
 func (self *kcpSession) Close() {
 	atomic.SwapInt64(&self.closing, 1)
+	// 将会话从管理器移除
+	self.Peer().(peer.SessionManager).Remove(self)
+
+	if self.endNotify != nil {
+		self.endNotify()
+	}
 }
 
 func (self *kcpSession) Send(msg interface{}) {
@@ -234,8 +240,6 @@ func (self *kcpSession) sendLoop() {
 	// 通知完成
 	self.exitSync.Done()
 }
-
-
 
 func (self *kcpSession) Start() {
 	atomic.StoreInt64(&self.closing, 0)
