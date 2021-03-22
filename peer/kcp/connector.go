@@ -20,7 +20,7 @@ type udpConnector struct {
 
 	remoteAddr *net.UDPAddr
 
-	defaultSes *kcpSession
+	defaultSes *KcpSession
 
 	tryConnTimes int // 尝试连接次数
 
@@ -186,7 +186,7 @@ func init() {
 		p := &udpConnector{
 			SessionManager: new(peer.CoreSessionManager),
 		}
-		//p.defaultSes = &kcpSession{
+		//p.defaultSes = &KcpSession{
 		//	pInterface:     p,
 		//	CoreProcBundle: &p.CoreProcBundle,
 		//}

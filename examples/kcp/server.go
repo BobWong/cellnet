@@ -52,6 +52,7 @@ func main() {
 
 				// 收到的是普通消息，回普通消息
 				ev.Session().Send(ack)
+				ev.Session().Close()
 			}
 
 		case *cellnet.SessionClosed: // 连接断开

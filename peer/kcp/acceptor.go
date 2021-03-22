@@ -29,7 +29,7 @@ type kcpAcceptor struct {
 	sesCleanTimeout  time.Duration
 	sesCleanLastTime time.Time
 
-	sesByConnTrack map[connTrackKey]*kcpSession
+	sesByConnTrack map[connTrackKey]*KcpSession
 }
 
 func (self *kcpAcceptor) IsReady() bool {
@@ -86,7 +86,7 @@ func (self *kcpAcceptor) Start() cellnet.Peer {
 	return self
 }
 
-//func (self *kcpAcceptor) protectedRecvPacket(ses *kcpSession, data []byte) {
+//func (self *kcpAcceptor) protectedRecvPacket(ses *KcpSession, data []byte) {
 //	defer func() {
 //
 //		if err := recover(); err != nil {
@@ -147,7 +147,7 @@ func (self *kcpAcceptor) accept() {
 		//self.checkTimeoutSession()
 		//
 		//ses := self.getSession(udpSession.RemoteAddr().(*net.UDPAddr))
-		//ses.kcpSession = udpSession
+		//ses.KcpSession = udpSession
 		//self.ProcEvent(&cellnet.RecvMsgEvent{
 		//	Ses: ses,
 		//	Msg: &cellnet.SessionAccepted{},
@@ -178,7 +178,7 @@ func (self *kcpAcceptor) checkTimeoutSession() {
 
 	// 定时清理超时的session
 	if now.After(self.sesCleanLastTime.Add(self.sesCleanTimeout)) {
-		sesToDelete := make([]*kcpSession, 0, 10)
+		sesToDelete := make([]*KcpSession, 0, 10)
 		for _, ses := range self.sesByConnTrack {
 			if !ses.IsAlive() {
 				sesToDelete = append(sesToDelete, ses)
@@ -193,14 +193,14 @@ func (self *kcpAcceptor) checkTimeoutSession() {
 	}
 }
 
-func (self *kcpAcceptor) getSession(addr *net.UDPAddr) *kcpSession {
+func (self *kcpAcceptor) getSession(addr *net.UDPAddr) *KcpSession {
 
 	key := newConnTrackKey(addr)
 
 	ses := self.sesByConnTrack[*key]
 
 	if ses == nil {
-		ses = &kcpSession{}
+		ses = &KcpSession{}
 		ses.pInterface = self
 		ses.CoreProcBundle = &self.CoreProcBundle
 		ses.key = key
@@ -254,7 +254,7 @@ func init() {
 			sesTimeout:       time.Minute,
 			sesCleanTimeout:  time.Minute,
 			sesCleanLastTime: time.Now(),
-			sesByConnTrack:   make(map[connTrackKey]*kcpSession),
+			sesByConnTrack:   make(map[connTrackKey]*KcpSession),
 		}
 
 		return p

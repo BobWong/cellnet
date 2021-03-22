@@ -21,7 +21,7 @@ type DataWriter interface {
 }
 
 // Socket会话
-type kcpSession struct {
+type KcpSession struct {
 	*peer.CoreProcBundle
 	peer.CoreContextSet
 	peer.CoreSessionIdentify
@@ -46,37 +46,37 @@ type kcpSession struct {
 	key         *connTrackKey
 }
 
-func (self *kcpSession) SetKcpSession(udpSes *kcp.UDPSession) {
+func (self *KcpSession) SetKcpSession(udpSes *kcp.UDPSession) {
 	self.connGuard.Lock()
 	self.kcpSession = udpSes
 	self.connGuard.Unlock()
 }
 
-func (self *kcpSession) GetKcpSession() *kcp.UDPSession {
+func (self *KcpSession) GetKcpSession() *kcp.UDPSession {
 	self.connGuard.RLock()
 	defer self.connGuard.RUnlock()
 	return self.kcpSession
 }
 
-func (self *kcpSession) IsAlive() bool {
+func (self *KcpSession) IsAlive() bool {
 	return time.Now().Before(self.timeOutTick)
 }
 
-func (self *kcpSession) LocalAddress() net.Addr {
+func (self *KcpSession) LocalAddress() net.Addr {
 	return self.GetKcpSession().LocalAddr()
 }
 
-func (self *kcpSession) Peer() cellnet.Peer {
+func (self *KcpSession) Peer() cellnet.Peer {
 	return self.pInterface
 }
 
 // 取原始连接
-func (self *kcpSession) Raw() interface{} {
+func (self *KcpSession) Raw() interface{} {
 	return self
 }
 
-//func (self *kcpSession) Recv(data []byte) {
-//	n,err := self.kcpSession.Read(data)
+//func (self *KcpSession) Recv(data []byte) {
+//	n,err := self.KcpSession.Read(data)
 //	if err != nil {
 //		log.GetLog().Error("kcp读取错误 %v",err)
 //	}
@@ -88,10 +88,10 @@ func (self *kcpSession) Raw() interface{} {
 //	}
 //}
 
-func (self *kcpSession) ReadData() []byte {
+func (self *KcpSession) ReadData() []byte {
 	recvBuff := make([]byte, MaxUDPRecvBuffer)
 	n, err := self.kcpSession.Read(recvBuff)
-	//n, err := self.kcpSession.Read(self.pkt)
+	//n, err := self.KcpSession.Read(self.pkt)
 	if err != nil {
 		log.GetLog().Error("kcp读取错误 %v", err)
 	}
@@ -99,7 +99,7 @@ func (self *kcpSession) ReadData() []byte {
 	return self.pkt
 }
 
-func (self *kcpSession) WriteData(data []byte) {
+func (self *KcpSession) WriteData(data []byte) {
 
 	c := self.GetKcpSession()
 	if c == nil {
@@ -118,12 +118,12 @@ func (self *kcpSession) WriteData(data []byte) {
 }
 
 //// 发送封包
-//func (self *kcpSession) Send(msg interface{}) {
+//func (self *KcpSession) Send(msg interface{}) {
 //
 //	self.SendMessage(&cellnet.SendMsgEvent{self, msg})
 //}
 
-func (self *kcpSession) Close() {
+func (self *KcpSession) Close() {
 	atomic.SwapInt64(&self.closing, 1)
 	// 将会话从管理器移除
 	self.Peer().(peer.SessionManager).Remove(self)
@@ -133,7 +133,7 @@ func (self *kcpSession) Close() {
 	}
 }
 
-func (self *kcpSession) Send(msg interface{}) {
+func (self *KcpSession) Send(msg interface{}) {
 	// 只能通过Close关闭连接
 	if msg == nil {
 		return
@@ -147,7 +147,7 @@ func (self *kcpSession) Send(msg interface{}) {
 
 }
 
-func (self *kcpSession) protectedReadMessage() (msg interface{}, err error) {
+func (self *KcpSession) protectedReadMessage() (msg interface{}, err error) {
 
 	defer func() {
 
@@ -163,12 +163,12 @@ func (self *kcpSession) protectedReadMessage() (msg interface{}, err error) {
 	return
 }
 
-func (self *kcpSession) IsManualClosed() bool {
+func (self *KcpSession) IsManualClosed() bool {
 	return atomic.LoadInt64(&self.closing) != 0
 }
 
 // 接收循环
-func (self *kcpSession) recvLoop() {
+func (self *KcpSession) recvLoop() {
 
 	var capturePanic bool
 
@@ -212,7 +212,7 @@ func (self *kcpSession) recvLoop() {
 }
 
 // 发送循环
-func (self *kcpSession) sendLoop() {
+func (self *KcpSession) sendLoop() {
 
 	var writeList []interface{}
 
@@ -241,7 +241,7 @@ func (self *kcpSession) sendLoop() {
 	self.exitSync.Done()
 }
 
-func (self *kcpSession) Start() {
+func (self *KcpSession) Start() {
 	atomic.StoreInt64(&self.closing, 0)
 
 	// connector复用session时，上一次发送队列未释放可能造成问题
@@ -273,8 +273,8 @@ func (self *kcpSession) Start() {
 	go self.sendLoop()
 }
 
-func newSession(session *kcp.UDPSession, p cellnet.Peer, endNotify func()) *kcpSession {
-	ses := &kcpSession{}
+func newSession(session *kcp.UDPSession, p cellnet.Peer, endNotify func()) *KcpSession {
+	ses := &KcpSession{}
 	ses.pInterface = p
 	ses.endNotify = endNotify
 	ses.sendQueue = cellnet.NewPipe()

@@ -17,7 +17,7 @@ type kcpSyncConnector struct {
 	peer.CoreProcBundle
 	peer.CoreTCPSocketOption
 
-	defaultSes *kcpSession
+	defaultSes *KcpSession
 }
 
 func (self *kcpSyncConnector) Port() int {
