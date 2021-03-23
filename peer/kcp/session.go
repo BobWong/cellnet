@@ -255,7 +255,6 @@ func (self *KcpSession) Start() {
 	// 需要接收和发送线程同时完成时才算真正的完成
 	self.exitSync.Add(2)
 
-	log.GetLog().Warn("添加%d到sessMgr",self.ID())
 	// 将会话添加到管理器, 在线程处理前添加到管理器(分配id), 避免ID还未分配,就开始使用id的竞态问题
 	self.Peer().(peer.SessionManager).Add(self)
 
