@@ -189,6 +189,10 @@ func (self *KcpSession) recvLoop() {
 			msg, err = self.ReadMessage(self)
 		}
 
+		if msg == nil {
+			continue
+		}
+
 		if err != nil {
 			if !util.IsEOFOrNetReadError(err) {
 				log.GetLog().Error("session closed, sesid: %d, err: %s", self.ID(), err)

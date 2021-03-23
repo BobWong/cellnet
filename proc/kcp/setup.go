@@ -16,6 +16,10 @@ func (KCPMessageTransmitter) OnRecvMessage(ses cellnet.Session) (msg interface{}
 
 	data := ses.Raw().(kcp.DataReader).ReadData()
 
+	if data == nil {
+		return
+	}
+
 	msg, err = RecvPacket(data)
 
 	msglog.WriteRecvLogger("kcp", ses, msg)
