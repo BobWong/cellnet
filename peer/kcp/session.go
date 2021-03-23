@@ -89,16 +89,15 @@ func (self *KcpSession) Raw() interface{} {
 //}
 
 func (self *KcpSession) ReadData() []byte {
-	if !self.IsAlive() {
-		return nil
-	}
 	recvBuff := make([]byte, MaxUDPRecvBuffer)
 	n, err := self.kcpSession.Read(recvBuff)
 	//n, err := self.KcpSession.Read(self.pkt)
 	if err != nil {
 		log.GetLog().Error("kcp读取错误 %v", err)
 	}
-	self.pkt = recvBuff[:n]
+	if n > 0 {
+		self.pkt = recvBuff[:n]
+	}
 	return self.pkt
 }
 
