@@ -94,6 +94,7 @@ func (self *KcpSession) ReadData() []byte {
 	//n, err := self.KcpSession.Read(self.pkt)
 	if err != nil {
 		log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
+		return nil
 	}
 	if n > 0 {
 		self.pkt = recvBuff[:n]
