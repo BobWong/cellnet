@@ -181,7 +181,7 @@ func (self *KcpSession) recvLoop() {
 		capturePanic = i.CaptureIOPanic()
 	}
 
-	for self.ForceCloseTag {
+	for !self.ForceCloseTag {
 
 		var msg interface{}
 		var err error
