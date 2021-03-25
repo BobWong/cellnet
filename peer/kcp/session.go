@@ -44,6 +44,7 @@ type KcpSession struct {
 	timeOutTick time.Time
 	kcpSession  *kcp.UDPSession
 	key         *connTrackKey
+	ForceCloseTag bool
 }
 
 func (self *KcpSession) SetKcpSession(udpSes *kcp.UDPSession) {
@@ -127,6 +128,7 @@ func (self *KcpSession) WriteData(data []byte) {
 //}
 
 func (self *KcpSession) Close() {
+	self.ForceCloseTag = true
 	atomic.SwapInt64(&self.closing, 1)
 	// 将会话从管理器移除
 	self.Peer().(peer.SessionManager).Remove(self)
@@ -179,7 +181,7 @@ func (self *KcpSession) recvLoop() {
 		capturePanic = i.CaptureIOPanic()
 	}
 
-	for !self.IsManualClosed() {
+	for self.ForceCloseTag {
 
 		var msg interface{}
 		var err error
@@ -289,5 +291,6 @@ func newSession(session *kcp.UDPSession, p cellnet.Peer, endNotify func()) *KcpS
 		GetBundle() *peer.CoreProcBundle
 	}).GetBundle()
 	ses.kcpSession = session
+	ses.ForceCloseTag = false
 	return ses
 }
