@@ -179,7 +179,7 @@ func (self *KcpSession) recvLoop() {
 		capturePanic = i.CaptureIOPanic()
 	}
 
-	for self.kcpSession.GetConn() != nil {
+	for !self.IsManualClosed() {
 
 		var msg interface{}
 		var err error
