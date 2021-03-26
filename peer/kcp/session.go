@@ -136,7 +136,7 @@ func (self *KcpSession) Close() {
 	if self.endNotify != nil {
 		self.endNotify()
 	}
-	self.kcpSession.GetConn().Close()
+	self.kcpSession.Close()
 }
 
 func (self *KcpSession) Send(msg interface{}) {
@@ -194,7 +194,8 @@ func (self *KcpSession) recvLoop() {
 			n, err := self.GetKcpSession().Read(recvBuff)
 			//n, err := self.KcpSession.Read(self.pkt)
 			if err != nil {
-				log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
+				//log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
+				self.Close()
 				continue
 			}
 			if n > 0 {
