@@ -90,16 +90,16 @@ func (self *KcpSession) Raw() interface{} {
 //}
 
 func (self *KcpSession) ReadData() []byte {
-	recvBuff := make([]byte, MaxUDPRecvBuffer)
-	n, err := self.GetKcpSession().Read(recvBuff)
-	//n, err := self.KcpSession.Read(self.pkt)
-	if err != nil {
-		log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
-		return nil
-	}
-	if n > 0 {
-		self.pkt = recvBuff[:n]
-	}
+	//recvBuff := make([]byte, MaxUDPRecvBuffer)
+	//n, err := self.GetKcpSession().Read(recvBuff)
+	////n, err := self.KcpSession.Read(self.pkt)
+	//if err != nil {
+	//	log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
+	//	return nil
+	//}
+	//if n > 0 {
+	//	self.pkt = recvBuff[:n]
+	//}
 	return self.pkt
 }
 
@@ -136,6 +136,7 @@ func (self *KcpSession) Close() {
 	if self.endNotify != nil {
 		self.endNotify()
 	}
+	self.kcpSession.GetConn().Close()
 }
 
 func (self *KcpSession) Send(msg interface{}) {
@@ -189,6 +190,17 @@ func (self *KcpSession) recvLoop() {
 		if capturePanic {
 			msg, err = self.protectedReadMessage()
 		} else {
+			recvBuff := make([]byte, MaxUDPRecvBuffer)
+			n, err := self.GetKcpSession().Read(recvBuff)
+			//n, err := self.KcpSession.Read(self.pkt)
+			if err != nil {
+				log.GetLog().Error("%d kcp读取错误 %v", self.ID(),err)
+				continue
+			}
+			if n > 0 {
+				self.pkt = recvBuff[:n]
+			}
+
 			msg, err = self.ReadMessage(self)
 		}
 
