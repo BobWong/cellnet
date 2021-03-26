@@ -106,7 +106,7 @@ func (self *KcpSession) ReadData() []byte {
 func (self *KcpSession) WriteData(data []byte) {
 
 	c := self.GetKcpSession()
-	if c == nil {
+	if c == nil || self.ForceCloseTag {
 		return
 	}
 
