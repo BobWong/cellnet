@@ -162,10 +162,8 @@ func (self *kcpAcceptor) accept() {
 
 func (self *kcpAcceptor) onNewSession(kcpSession *kcp.UDPSession) {
 
-	ses := self.getSession(kcpSession.RemoteAddr().(*net.UDPAddr))
-	if ses == nil {
-		ses = newSession(kcpSession, self, nil)
-		ses.Start()
+	ses := self.getSession(kcpSession.RemoteAddr().(*net.UDPAddr),kcpSession)
+	if ses != nil {
 		self.ProcEvent(&cellnet.RecvMsgEvent{
 			Ses: ses,
 			Msg: &cellnet.SessionAccepted{},
@@ -194,18 +192,17 @@ func (self *kcpAcceptor) checkTimeoutSession() {
 	}
 }
 
-func (self *kcpAcceptor) getSession(addr *net.UDPAddr) *KcpSession {
+func (self *kcpAcceptor) getSession(addr *net.UDPAddr,kcpSession *kcp.UDPSession) *KcpSession {
 
 	key := newConnTrackKey(addr)
 
 	ses := self.sesByConnTrack[*key]
 
 	if ses == nil {
-		ses = &KcpSession{}
-		ses.pInterface = self
-		ses.CoreProcBundle = &self.CoreProcBundle
+		ses = newSession(kcpSession, self, nil)
 		ses.key = key
 		self.sesByConnTrack[*key] = ses
+		ses.Start()
 	}
 
 	// 续租
