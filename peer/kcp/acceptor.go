@@ -195,6 +195,7 @@ func (self *kcpAcceptor) getSession(addr *net.UDPAddr,kcpSession *kcp.UDPSession
 	if ses == nil {
 		ses = newSession(kcpSession, self, nil)
 		ses.key = key
+		ses.Start()
 		self.ProcEvent(&cellnet.RecvMsgEvent{
 			Ses: ses,
 			Msg: &cellnet.SessionAccepted{},
@@ -202,7 +203,7 @@ func (self *kcpAcceptor) getSession(addr *net.UDPAddr,kcpSession *kcp.UDPSession
 	}else {
 		ses.pInterface = self
 	}
-	ses.Start()
+
 	self.sesByConnTrack[*key] = ses
 
 	// 续租
