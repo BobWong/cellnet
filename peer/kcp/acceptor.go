@@ -201,9 +201,11 @@ func (self *kcpAcceptor) getSession(addr *net.UDPAddr,kcpSession *kcp.UDPSession
 	if ses == nil {
 		ses = newSession(kcpSession, self, nil)
 		ses.key = key
-		self.sesByConnTrack[*key] = ses
 		ses.Start()
+	}else {
+		ses.pInterface = self
 	}
+	self.sesByConnTrack[*key] = ses
 
 	// 续租
 	ses.timeOutTick = time.Now().Add(self.sesTimeout)
