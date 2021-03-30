@@ -144,7 +144,7 @@ func (self *kcpAcceptor) accept() {
 		//	break
 		//}
 		//
-		//self.checkTimeoutSession()
+		self.checkTimeoutSession()
 		//
 		//ses := self.getSession(udpSession.RemoteAddr().(*net.UDPAddr))
 		//ses.KcpSession = udpSession
@@ -162,14 +162,15 @@ func (self *kcpAcceptor) accept() {
 
 func (self *kcpAcceptor) onNewSession(kcpSession *kcp.UDPSession) {
 
-	ses := newSession(kcpSession, self, nil)
-
-	ses.Start()
-
-	self.ProcEvent(&cellnet.RecvMsgEvent{
-		Ses: ses,
-		Msg: &cellnet.SessionAccepted{},
-	})
+	ses := self.getSession(kcpSession.RemoteAddr().(*net.UDPAddr))
+	if ses == nil {
+		ses = newSession(kcpSession, self, nil)
+		ses.Start()
+		self.ProcEvent(&cellnet.RecvMsgEvent{
+			Ses: ses,
+			Msg: &cellnet.SessionAccepted{},
+		})
+	}
 }
 
 // 检查超时session
